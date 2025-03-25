@@ -1,3 +1,0 @@
-/home/vtzy/Documents/RPP-imp/build/CMakeFiles/RPP-imp.dir
-/home/vtzy/Documents/RPP-imp/build/CMakeFiles/edit_cache.dir
-/home/vtzy/Documents/RPP-imp/build/CMakeFiles/rebuild_cache.dir
