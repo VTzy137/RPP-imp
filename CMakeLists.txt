@@ -5,13 +5,17 @@ project(RPP-imp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Include directories
-include_directories(include)
+file(COPY assets/ DESTINATION assets)
 
-# Add the library
+# Include directories
+include_directories(include include/function)
+
+# Add the libraries
 add_library(mutation library/function/mutation.cpp)
-# Link the library to the main program
-target_link_libraries(RPP-imp PRIVATE mutation)
+add_library(genetic library/function/genetic.cpp)
 
 # Add executable
-add_executable(RPP-imp src/main.cpp)
+add_executable(RPP-imp src/main.cpp src/app.cpp)
+
+# Link the libraries to the main program
+target_link_libraries(RPP-imp PRIVATE mutation genetic)

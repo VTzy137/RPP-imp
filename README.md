@@ -3,6 +3,14 @@
 
 RPP-imp is a C++ evolutionary computation for evolution.
 
+<details>
+<summary>summary</summary>
+<br>
+
+details
+
+</details>
+
 # Instructions
 
 Project structure:\
@@ -27,6 +35,26 @@ printf("Hello, World!");
 # Getting started
 
 ## Download
+
+
+
+```sh
+git clone https://github.com/VTzy137/RPP-imp.git
+cd RPP-imp
+```
+
+## Build
+
+```sh
+cmake .
+make
+```
+
+## Run
+
+```sh
+./RPP-imp
+```
 
 # Documentations
 

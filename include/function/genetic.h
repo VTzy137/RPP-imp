@@ -1,6 +1,8 @@
 #ifndef GENETIC_ALGORITHM_H
 #define GENETIC_ALGORITHM_H
 
-void runGeneticAlgorithm();
+namespace function {
+    void runGeneticAlgorithm();
+}
 
-#endif // GENETIC_ALGORITHM_H
+#endif
