@@ -1,13 +1,16 @@
-name: "RPP-imp"
-path: "RPP-imp"
-type: "directory"
-url: "https://github.com/RPP-imp/RPP-imp.git"
-branch: "main"
-commit: "1234567890"
-
-# CMake
+# CMake generated files
 CMakeCache.txt
+CMakeFiles/
 cmake_install.cmake
 Makefile
+Makefile.in
 
+# Build directories
 build/
+
+# IDE and editor directories and files
+.vscode/
+
+# Workspace files
+Rpp-imp.code-workspace
+
