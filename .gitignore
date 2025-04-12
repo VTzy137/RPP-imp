@@ -10,6 +10,7 @@ build/
 
 # IDE and editor directories and files
 .vscode/
+.cursor/
 
 # Workspace files
 Rpp-imp.code-workspace
