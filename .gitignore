@@ -15,3 +15,5 @@ build/
 # Workspace files
 Rpp-imp.code-workspace
 
+# Submodules
+PSO-ES.PathPlanning/
