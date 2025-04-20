@@ -4,7 +4,14 @@ FROM ubuntu:22.04 AS builder
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    git
+    git \
+    doxygen \
+    libqt4-dev \
+    libqt4-opengl-dev \
+    libqglviewer-dev-qt4 \ 
+    libglfw3-dev \
+    libglew-dev \
+    libgl1-mesa-dev
 
 
 # Tạo user non-root

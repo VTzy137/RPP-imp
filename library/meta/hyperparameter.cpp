@@ -34,7 +34,7 @@ json loadHyperparameters(const std::string& filename) {
     return hyperparams;
 }
 
-void exampleUseJson() {
+int main() {
     std::cout << "Hello, World!" << std::endl;
     json hyperparams = {
         {"learning_rate", 0.001},
@@ -52,4 +52,6 @@ void exampleUseJson() {
     
     json loaded = loadHyperparameters("hyperparams.json");
     std::cout << "Loaded parameters: " << loaded.dump(4) << std::endl;
+
+    return 0;
 }

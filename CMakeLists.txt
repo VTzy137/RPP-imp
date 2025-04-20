@@ -5,7 +5,7 @@ project(RPP-imp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-file(COPY assets/ DESTINATION assets)
+# file(COPY assets/ DESTINATION assets)
 
 # Include directories
 include_directories(include include/function)
