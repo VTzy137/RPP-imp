@@ -1,21 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 project(RPP-imp)
 
-# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# file(COPY assets/ DESTINATION assets)
+file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "library/**/*.cpp")
 
-# Include directories
-include_directories(include include/function)
+add_library(rpp_lib STATIC ${LIB_SOURCES})
+ 
+target_include_directories(rpp_lib PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+)
 
-# Add the libraries
-add_library(mutation library/function/mutation.cpp)
-add_library(genetic library/function/genetic.cpp)
+set(APP_SOURCES
+    src/main.cpp
+    src/app.cpp
+)
 
-# Add executable
-add_executable(RPP-imp src/main.cpp src/app.cpp)
+add_executable(RPP-imp ${APP_SOURCES})
 
-# Link the libraries to the main program
-target_link_libraries(RPP-imp PRIVATE mutation genetic)
+target_link_libraries(RPP-imp PRIVATE rpp_lib)

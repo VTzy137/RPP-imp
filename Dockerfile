@@ -6,43 +6,46 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     doxygen \
-    libqt4-dev \
-    libqt4-opengl-dev \
-    libqglviewer-dev-qt4 \ 
+    qtbase5-dev \
+    libqt5opengl5-dev \
+    libqglviewer-dev-qt5 \
     libglfw3-dev \
     libglew-dev \
-    libgl1-mesa-dev
+    libgl1-mesa-dev \
+    nlohmann-json3-dev
 
+WORKDIR /app
 
-# Tạo user non-root
-RUN useradd -ms /bin/bash devuser
-USER devuser
-WORKDIR /home/devuser/app
+# Copy source code into builder container
+COPY . .
 
-# Copy toàn bộ mã nguồn
-COPY --chown=devuser:devuser . .
-
-# Build project
 RUN mkdir -p build && cd build && cmake .. && make -j$(nproc)
 
 # ----------- STAGE 2: RUNTIME ------------
 FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y libstdc++6
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y \
+    libstdc++6 \
+ && rm -rf /var/lib/apt/lists/*
 
-# Tạo user non-root
+# Create non-root user
 RUN useradd -ms /bin/bash devuser
-USER devuser
+
+# Set working directory
 WORKDIR /home/devuser/app
 
-# Copy file thực thi từ builder
-COPY --from=builder /home/devuser/app/build/RPP-imp ./RPP-imp
-
-# Cấp quyền thực thi
+# Copy binary as root and make it executable
+COPY --from=builder /app/build/RPP-imp ./RPP-imp
 RUN chmod +x ./RPP-imp
 
-# Chạy ứng dụng
+# Change to non-root user after permissions are set
+USER devuser
+
+# Run the app
 ENTRYPOINT ["./RPP-imp"]
+
+
 
 
 

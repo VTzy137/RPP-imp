@@ -18,7 +18,21 @@ echo "RPP_IMP_ROOT: $RPP_IMP_ROOT"
 export RPP_IMP_ROOT
 
 cd "$RPP_IMP_ROOT"
+source $RPP_IMP_ROOT/scripts/install.sh
+
 echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
 
-docker build -t rpp-imp .
-docker run rpp-imp:latest
+# Step 1: Create a fresh build directory (if not already)
+rm -rf build && mkdir build && cd build
+
+# Step 2: Run CMake, pointing to the parent directory (source dir)
+cmake ..
+
+# Step 3: Build the executable
+make -j$(nproc)
+
+echo -e "\n==============================\n"
+echo "Running RPP-imp application..."
+echo -e "\n==============================\n"
+
+./RPP-imp

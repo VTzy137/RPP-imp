@@ -2,7 +2,7 @@
 #define GENETIC_ALGORITHM_H
 
 namespace function {
-    void runGeneticAlgorithm();
+void runGeneticAlgorithm();
 }
 
 #endif
