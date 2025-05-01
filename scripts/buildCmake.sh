@@ -18,7 +18,7 @@ echo "RPP_IMP_ROOT: $RPP_IMP_ROOT"
 export RPP_IMP_ROOT
 
 cd "$RPP_IMP_ROOT"
-source $RPP_IMP_ROOT/scripts/install.sh
+# source $RPP_IMP_ROOT/scripts/install.sh
 
 echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
 

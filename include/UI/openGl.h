@@ -1,17 +1,7 @@
-#include <iostream>
+#pragma once
 #include <vector>
+#include <utility>
 
-struct Point2D {
-    float x, y;
-};
-
-#ifndef OPENGL_H
-#define OPENGL_H
-
-namespace OpenGL {
-    std::vector<Point2D> generatePath();
-    void renderPath(const std::vector<Point2D>& path);
-    void testOpenGL();
+namespace OpenGLUI {
+    void drawLineStrip(const std::vector<std::pair<int, int>>& points, int width, int height);
 }
-
-#endif
