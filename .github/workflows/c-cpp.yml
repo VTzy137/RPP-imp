@@ -12,12 +12,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            cmake \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libglew-dev \
+            libglfw3-dev \
+            libx11-dev \
+            xorg-dev
+
       - name: Create Build Directory
         run: mkdir -p build
+
       - name: Configure CMake
         run: cmake -B build -S .
+
       - name: Build
         run: cmake --build build
+
       - name: Test
         run: |
           cd build
