@@ -12,7 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Install dependencies
         run: |
           sudo apt update
@@ -23,7 +22,9 @@ jobs:
             libglew-dev \
             libglfw3-dev \
             libx11-dev \
-            xorg-dev
+            xorg-dev \
+            nlohmann-json-dev
+
 
       - name: Create Build Directory
         run: mkdir -p build
