@@ -23,7 +23,7 @@ jobs:
             libglfw3-dev \
             libx11-dev \
             xorg-dev \
-            nlohmann-json-dev
+            nlohmann-json3-dev
 
 
       - name: Create Build Directory
