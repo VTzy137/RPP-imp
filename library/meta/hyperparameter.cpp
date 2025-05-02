@@ -1,57 +1,40 @@
-#include <nlohmann/json.hpp>
-#include <fstream>
-#include <iostream>
-#include <string>
+#include "meta/hyperparameter.h"
 
-// Using the popular nlohmann/json library
 using json = nlohmann::json;
 
-// Save hyperparameters
-void saveHyperparameters(const json& hyperparams, const std::string& filename) {
-    std::ofstream outFile(filename);
-    if (outFile.is_open()) {
-        outFile << hyperparams.dump(4); // Pretty print with 4-space indent
-        outFile.close();
-    } else {
-        std::cerr << "Could not open file for writing: " << filename << std::endl;
+Config load_config(const std::string& filepath) {
+    std::ifstream in(filepath);
+    if (!in.is_open()) {
+        throw std::runtime_error("Failed to open config file: " + filepath);
     }
+
+    json j;
+    in >> j;
+
+    Config cfg;
+    cfg.learning_rate = j.value("learning_rate", 0.01);
+    cfg.population_size = j.value("population_size", 100);
+    cfg.mutation_rate = j.value("mutation_rate", 0.1);
+    return cfg;
 }
 
-// Load hyperparameters
-json loadHyperparameters(const std::string& filename) {
-    json hyperparams;
-    std::ifstream inFile(filename);
-    if (inFile.is_open()) {
-        try {
-            inFile >> hyperparams;
-        } catch (const std::exception& e) {
-            std::cerr << "Error parsing JSON: " << e.what() << std::endl;
-        }
-        inFile.close();
-    } else {
-        std::cerr << "Could not open file for reading: " << filename << std::endl;
+void update_config(const std::string& filepath, const std::string& key,
+                   const nlohmann::json& new_value) {
+    std::ifstream in(filepath);
+    if (!in.is_open()) {
+        throw std::runtime_error("Failed to open config file: " + filepath);
     }
-    return hyperparams;
-}
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    json hyperparams = {
-        {"learning_rate", 0.001},
-        {"batch_size", 64},
-        {"epochs", 10},
-        {"dropout", 0.2}
-    };
-    
-    saveHyperparameters(hyperparams, "hyperparams.json");
-    
-    hyperparams["temperature"] = 0.8;
-    hyperparams["decay_rate"] = 0.95;
-    
-    saveHyperparameters(hyperparams, "hyperparams_updated.json");
-    
-    json loaded = loadHyperparameters("hyperparams.json");
-    std::cout << "Loaded parameters: " << loaded.dump(4) << std::endl;
+    nlohmann::json j;
+    in >> j;
+    in.close();
 
-    return 0;
+    j[key] = new_value;
+
+    std::ofstream out(filepath);
+    if (!out.is_open()) {
+        throw std::runtime_error("Failed to write config file: " + filepath);
+    }
+
+    out << j.dump(4); // pretty-print with indent=4
 }

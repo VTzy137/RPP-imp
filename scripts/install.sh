@@ -11,6 +11,3 @@ sudo apt-get update && sudo apt-get install -y \
     libglew-dev \
     libgl1-mesa-dev \
     nlohmann-json3-dev \
-
-# sudo apt install libboost-all-dev
-# sudo apt install nlohmann-json3-dev
