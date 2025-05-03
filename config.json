@@ -1,5 +1,5 @@
 {
     "learning_rate": 0.01,
-    "mutation_rate": 0.12100000000000002,
+    "mutation_rate": 0.14641000000000004,
     "population_size": 100
 }
