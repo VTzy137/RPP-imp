@@ -13,29 +13,28 @@ elif [ -n "$ZSH_VERSION" ]; then
 else
     echo "Unknown shell"
 fi
-echo "RPP_IMP_ROOT: $RPP_IMP_ROOT"
 
 export RPP_IMP_ROOT
+# echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
 
 cd "$RPP_IMP_ROOT"
 # source $RPP_IMP_ROOT/scripts/install.sh
-cmake -G Ninja -S . -B build
-cmake --preset default
-cmake --build build
 
-echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
+BUILD_DIR="$RPP_IMP_ROOT/build"
 
-# Step 1: Create a fresh build directory (if not already)
-rm -rf build && mkdir build && cd build
-
-# Step 2: Run CMake, pointing to the parent directory (source dir)
-cmake ..
-
-# Step 3: Build the executable
-make -j$(nproc)
+if [ -d "$BUILD_DIR" ] || [ -d "$BUILD_DIR/RPP-imp" ]; then
+  echo "Build directory exists, building..."
+  cmake --build "$BUILD_DIR"
+else
+  echo "Build directory does not exist, configuring and building..."
+  rm -rf "$BUILD_DIR"
+  cmake -G Ninja -S "$RPP_IMP_ROOT" -B "$BUILD_DIR" 
+  cmake --build "$BUILD_DIR" 
+fi
 
 echo -e "\n==============================\n"
 echo "Running RPP-imp application..."
 echo -e "\n==============================\n"
 
-./RPP-imp
+./build/RPP-imp
+

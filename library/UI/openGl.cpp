@@ -1,12 +1,8 @@
 #include "UI/openGl.h"
-#include <mutex>
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
 
 namespace OpenGLUI {
-void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height) {
+void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height,
+                   std::atomic<bool>& running) {
     if (!glfwInit()) {
         std::cerr << "Failed to init GLFW\n";
         return;
@@ -22,7 +18,7 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
     glewExperimental = true;
     glewInit();
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window) && running) {
         glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -44,4 +40,5 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
     glfwDestroyWindow(window);
     glfwTerminate();
 }
+
 } // namespace OpenGLUI

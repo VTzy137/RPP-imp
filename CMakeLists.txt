@@ -19,7 +19,10 @@ include_directories(
     ${GLFW_INCLUDE_DIRS}
 )
 
-add_definitions(-DASSETS_PATH="${CMAKE_SOURCE_DIR}/assets")
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+
+# add_compile_definitions(ASSET_PATH=${CMAKE_SOURCE_DIR}/assets)
+add_definitions(-DASSET_PATH=\"${CMAKE_SOURCE_DIR}/assets\")
 
 
 add_library(rpp_lib STATIC ${LIB_SOURCES})
