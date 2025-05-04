@@ -19,6 +19,9 @@ export RPP_IMP_ROOT
 
 cd "$RPP_IMP_ROOT"
 # source $RPP_IMP_ROOT/scripts/install.sh
+cmake -G Ninja -S . -B build
+cmake --preset default
+cmake --build build
 
 echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
 

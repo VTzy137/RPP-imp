@@ -6,13 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "library/**/*.cpp")
 
-find_package(OpenGL REQUIRED)
 
-# Find GLFW
+find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
-
-# Add GLEW
 find_package(GLEW REQUIRED)
 
 # Include dirs
@@ -22,6 +19,7 @@ include_directories(
     ${GLFW_INCLUDE_DIRS}
 )
 
+add_definitions(-DASSETS_PATH="${CMAKE_SOURCE_DIR}/assets")
 
 
 add_library(rpp_lib STATIC ${LIB_SOURCES})
