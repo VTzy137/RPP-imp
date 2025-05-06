@@ -1,9 +1,0 @@
-build/
-.vscode/
-.cursor/
-*.o
-*.log
-.git
-
-PSO-ES.PathPlanning/
-Rpp-imp.code-workspace
