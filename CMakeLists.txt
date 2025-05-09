@@ -9,10 +9,9 @@ file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "library/**/*.cpp")
 
 find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
 find_package(GLEW REQUIRED)
+pkg_search_module(GLFW REQUIRED glfw3)
 
-# Include dirs
 include_directories(
     ${OPENGL_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIRS}
@@ -21,7 +20,6 @@ include_directories(
 
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
-# add_compile_definitions(ASSET_PATH=${CMAKE_SOURCE_DIR}/assets)
 add_definitions(-DASSET_PATH=\"${CMAKE_SOURCE_DIR}/assets\")
 
 
