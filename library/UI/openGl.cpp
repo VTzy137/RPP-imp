@@ -1,4 +1,4 @@
-#include "UI/openGl.h"
+#include "UI/openGl.hpp"
 
 namespace OpenGLUI {
 void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height,
