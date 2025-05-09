@@ -1,5 +1,5 @@
 #include <iostream>
-#include "app.h"
+#include "app.hpp"
 
 void runApp() {
     std::cout << "Running app logic..." << std::endl;
