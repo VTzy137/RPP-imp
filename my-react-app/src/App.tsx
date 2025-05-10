@@ -11,8 +11,8 @@ const App: React.FC = () => {
       <div className="App">
         <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/chart" element={<Chart />} />
+            <Route path="/RPP-imp/" element={<Home />} />
+            <Route path="/RPP-imp/chart" element={<Chart />} />
           </Routes>
       </div>
     </Router>
