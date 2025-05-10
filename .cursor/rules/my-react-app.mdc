@@ -1,0 +1,31 @@
+---
+description: When you want to know entire project
+globs: 
+alwaysApply: false
+---
+# Cursor AI Rules for my-react-app
+
+# 1. Architecture Awareness
+- Always refer to the architecture diagram in `architecture.mmd` (in the project root or src/) for understanding the React app structure and component relationships.
+- When generating or refactoring code, ensure it fits the flow and structure shown in the diagram.
+
+# 2. Best Practices
+- Use modern React (function components, hooks, ES6+ syntax).
+- Prefer small, single-responsibility components.
+- Use clear, descriptive names for files, components, and functions.
+- Write code that is easy to test and maintain.
+
+# 3. File Organization
+- Place new React components in the `src/` directory.
+- Keep styles in `.css` files, colocated with their components if possible.
+# 4. Testing
+- Place tests in files ending with `.test.js` in the `src/` directory.
+
+# 5. Documentation
+- Update the architecture diagram (`architecture.mmd`) if you make significant changes to the app structure.
+
+# 6. AI Context
+- If you need to reference the app structure, always check `architecture.mmd` first.
+- If unsure about component relationships, ask the user to clarify or refer to the diagram.
+
+# End of rules
