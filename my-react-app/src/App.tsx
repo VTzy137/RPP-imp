@@ -1,18 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home";
 import Chart from "./pages/Chart";
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="App">
+    <Router basename="/RPP-imp">
+      <div className="bg-gray-800 text-center min-h-screen flex flex-col">
         <Navbar />
           <Routes>
-            <Route path="/RPP-imp/" element={<Home />} />
-            <Route path="/RPP-imp/chart" element={<Chart />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/chart" element={<Chart />} />
           </Routes>
       </div>
     </Router>

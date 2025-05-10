@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Chart,
   Filler,
@@ -138,12 +138,12 @@ const LineChart: React.FC<LineChartProps> = ({
   );
 
   // Simulate data for testing (only in demo mode)
-  const simulateDataPoint = () => {
+  const simulateDataPoint = useCallback(() => {
     if (demoMode) {
       const value = Math.floor(Math.random() * 100);
       addDataPoint(value);
     }
-  };
+  }, [demoMode, addDataPoint]);
 
   // Add a demo point (for testing)
   useEffect(() => {
@@ -154,7 +154,7 @@ const LineChart: React.FC<LineChartProps> = ({
 
       return () => window.clearInterval(interval);
     }
-  }, [demoMode]);
+  }, [demoMode, simulateDataPoint]);
 
   // Handle manual reconnection
   const handleReconnect = () => {

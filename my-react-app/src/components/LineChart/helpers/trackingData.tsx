@@ -240,7 +240,7 @@ export function useDataStream(socketUrl: string, initialData?: ChartData) {
       unsubscribe();
       window.clearInterval(statusCheck);
     };
-  }, [socketUrl, updateChartData]);
+  }, [socketUrl, updateChartData, dataManager]);
 
   // Method to manually add data (useful for testing or fallback)
   const addDataPoint = useCallback((value: number, timestamp?: string | number) => {
