@@ -13,3 +13,6 @@ Rpp-imp.code-workspace
 
 # Submodules
 PSO-ES.PathPlanning/
+
+# Cursor
+.cursor/mcp.json

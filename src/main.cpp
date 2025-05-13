@@ -1,3 +1,4 @@
+#include <future>
 #include <iostream>
 #include <thread>
 #include <utility>
@@ -13,12 +14,31 @@
 #include "utils/hyperparameter.hpp"
 #include "utils/input.hpp"
 
+/**
+ * @file main.cpp
+ * @brief Entry point for the RPP-imp application. Initializes the application, reads input, runs
+ * algorithms, and manages visualization.
+ *
+ * This file demonstrates the main workflow of the RPP-imp project, including reading map data,
+ * initializing populations, running optimization algorithms, and visualizing results using OpenGL.
+ */
+
 /*!SECTION
-    @brief 
+    @brief
     @param argc
     @param argv
-    @return 
+    @return
 */
+/**
+ * @brief Main entry point for the RPP-imp application.
+ *
+ * Initializes the application, reads the map, sets up populations, runs algorithms (A*, PSOES), and
+ * visualizes results.
+ *
+ * @param argc Number of command-line arguments
+ * @param argv Array of command-line argument strings
+ * @return int Exit status code
+ */
 int main(int argc, char* argv[]) {
 
     runApp();
@@ -52,17 +72,40 @@ int main(int argc, char* argv[]) {
 
     graph::markObstacle();
 
+    /**
+     * @brief Parallel initialization of populations using std::async for multi-core systems.
+     *
+     * This section initializes the population in parallel to leverage multi-core CPUs.
+     * Each task creates a path and stores it in the global population array.
+     *
+     * @note This assumes vtzy_types::population and vtzy_types::normalDirect are thread-safe for
+     * this usage.
+     */
+    std::vector<std::future<void>> init_futures;
     for (int i = 0; i < 30; i++) {
-        // findByES(start, finish);
-        vtzy_types::point *tmp = new vtzy_types::point(vtzy_types::start->x, vtzy_types::start->y,
-                                                       nullptr),
-                          *tmp1 = new vtzy_types::point(vtzy_types::finish->x,
-                                                        vtzy_types::finish->y, nullptr);
-        vtzy_types::normalDirect[i] = init_population::initRandPath(tmp, tmp1);
-        vtzy_types::population[i] = new vtzy_types::path(tmp);
-        // normalDirect[i] = (rand() % 100) & 1;
-        vtzy_types::numPopulations = i + 1;
+          // findByES(start, finish);
+        // vtzy_types::point *tmp = new vtzy_types::point(vtzy_types::start->x, vtzy_types::start->y,
+        //                                                nullptr),
+        //                   *tmp1 = new vtzy_types::point(vtzy_types::finish->x,
+        //                                                 vtzy_types::finish->y, nullptr);
+        // vtzy_types::normalDirect[i] = init_population::initRandPath(tmp, tmp1);
+        // vtzy_types::population[i] = new vtzy_types::path(tmp);
+        // // normalDirect[i] = (rand() % 100) & 1;
+        // vtzy_types::numPopulations = i + 1;
+        init_futures.push_back(std::async(std::launch::async, [i]() {
+            auto tmp = std::make_unique<vtzy_types::point>(vtzy_types::start->x,
+                                                           vtzy_types::start->y, nullptr);
+            auto tmp1 = std::make_unique<vtzy_types::point>(vtzy_types::finish->x,
+                                                            vtzy_types::finish->y, nullptr);
+            vtzy_types::normalDirect[i] = init_population::initRandPath(tmp.get(), tmp1.get());
+            vtzy_types::population[i] = new vtzy_types::path(tmp.release());
+            // Note: numPopulations is set after the loop for thread safety
+        }));
     }
+    std::cout << "Initializing populations..." << std::endl;
+    for (auto& f : init_futures)
+        f.get();
+    vtzy_types::numPopulations = 30;
 
     // probabilisticMap();
     algorithm::aStar();
