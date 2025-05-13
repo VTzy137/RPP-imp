@@ -7,13 +7,20 @@
 #include "app.hpp"
 #include "function/algorithm.hpp"
 #include "function/graph.hpp"
+#include "function/initPopulation.hpp"
 #include "function/path.hpp"
 #include "types.hpp"
 #include "utils/hyperparameter.hpp"
 #include "utils/input.hpp"
-#include <function/initPopulation.hpp>
 
+/*!SECTION
+    @brief 
+    @param argc
+    @param argv
+    @return 
+*/
 int main(int argc, char* argv[]) {
+
     runApp();
 
     Input::readMap();
@@ -47,8 +54,10 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < 30; i++) {
         // findByES(start, finish);
-        vtzy_types::point *tmp = new vtzy_types::point(vtzy_types::start->x, vtzy_types::start->y, nullptr),
-                          *tmp1 = new vtzy_types::point(vtzy_types::finish->x, vtzy_types::finish->y, nullptr);
+        vtzy_types::point *tmp = new vtzy_types::point(vtzy_types::start->x, vtzy_types::start->y,
+                                                       nullptr),
+                          *tmp1 = new vtzy_types::point(vtzy_types::finish->x,
+                                                        vtzy_types::finish->y, nullptr);
         vtzy_types::normalDirect[i] = init_population::initRandPath(tmp, tmp1);
         vtzy_types::population[i] = new vtzy_types::path(tmp);
         // normalDirect[i] = (rand() % 100) & 1;
@@ -80,7 +89,7 @@ int main(int argc, char* argv[]) {
     path::pathFunc(vtzy_types::astarRes);
 
     line = {};
-    vtzy_types::point *tmp = vtzy_types::gPath->begin;
+    vtzy_types::point* tmp = vtzy_types::gPath->begin;
     while (tmp != nullptr) {
         line.push_back({(int)tmp->x, (int)tmp->y});
         tmp = tmp->next;

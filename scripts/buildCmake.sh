@@ -20,6 +20,9 @@ export RPP_IMP_ROOT
 cd "$RPP_IMP_ROOT"
 # source $RPP_IMP_ROOT/scripts/install.sh
 
+#  export CMAKE_ROOT=$(cmake --system-information | grep '^CMAKE_ROOT' | cut -d= -f2- | xargs)
+#  export CMAKE_ROOT=$(echo $CMAKE_ROOT | sed 's/^CMAKE_ROOT //')
+
 BUILD_DIR="$RPP_IMP_ROOT/build"
 
 if [ -d "$BUILD_DIR" ] || [ -d "$BUILD_DIR/RPP-imp" ]; then
