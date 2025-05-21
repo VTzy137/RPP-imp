@@ -1,0 +1,9 @@
+---
+description: 
+globs: *.cpp,*.hpp
+alwaysApply: false
+---
+# Memory Management
+
+- Avoid raw pointers, prefer smart pointers and RAII.
+- use RAII if needed, smart pointers, const correctness, and STL over manual memory handling.

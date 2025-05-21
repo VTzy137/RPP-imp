@@ -13,6 +13,7 @@
     "complex": "cpp",
     "*.tcc": "cpp",
     "bitset": "cpp",
-    "istream": "cpp"
+    "istream": "cpp",
+    "chrono": "cpp"
   }
 }

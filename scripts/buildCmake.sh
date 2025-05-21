@@ -15,25 +15,21 @@ else
 fi
 
 export RPP_IMP_ROOT
-# echo "[+] RPP_IMP_ROOT set to: $RPP_IMP_ROOT"
 
 cd "$RPP_IMP_ROOT"
-# source $RPP_IMP_ROOT/scripts/install.sh
-
-#  export CMAKE_ROOT=$(cmake --system-information | grep '^CMAKE_ROOT' | cut -d= -f2- | xargs)
-#  export CMAKE_ROOT=$(echo $CMAKE_ROOT | sed 's/^CMAKE_ROOT //')
 
 BUILD_DIR="$RPP_IMP_ROOT/build"
 
-if [ -d "$BUILD_DIR" ] || [ -d "$BUILD_DIR/RPP-imp" ]; then
+if [ -d "$BUILD_DIR" ]; then
   echo "Build directory exists, building..."
-  cmake --build "$BUILD_DIR"
 else
-  echo "Build directory does not exist, configuring and building..."
-  rm -rf "$BUILD_DIR"
-  cmake -G Ninja -S "$RPP_IMP_ROOT" -B "$BUILD_DIR" 
-  cmake --build "$BUILD_DIR" 
+  echo "Build directory does not exist, configuring..."
+  mkdir -p "$BUILD_DIR"
 fi
+
+# cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -S "$RPP_IMP_ROOT" -B "$BUILD_DIR"
+cmake -G Ninja -S "$RPP_IMP_ROOT" -B "$BUILD_DIR"
+cmake --build "$BUILD_DIR"
 
 echo -e "\n==============================\n"
 echo "Running RPP-imp application..."

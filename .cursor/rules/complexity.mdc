@@ -1,0 +1,11 @@
+---
+description: 
+globs: *.cpp,*.hpp
+alwaysApply: false
+---
+# Time complexity
+
+- prefer SIMD, threading.
+- Strict code avoid error, mismatch.
+- Highlight logic issues, performance bottlenecks, or design flaws.
+- Review code for logic errors, performance bottlenecks, and architectural weaknesses. Propose clean, maintainable improvements.

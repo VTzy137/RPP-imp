@@ -1,0 +1,12 @@
+---
+description: 
+globs: *.cpp,*.hpp
+alwaysApply: false
+---
+
+# Code Structure
+
+- Using Cmake for C++ code.
+- Make code detached by small function, each function have a single responsibility.
+- Structure code into small, modular functions. Each function must have a single responsibility and no side effects.
+- Organize the code to support both desktop and real-time graphical output. Use abstraction layers to isolate platform-specific code.
