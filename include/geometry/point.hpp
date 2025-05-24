@@ -23,5 +23,7 @@ class Point {
     static bool canMoveTo(int targetY, int targetX);
     static bool canMoveTo(float targetY, float targetX);
     static bool canMoveTo(const Point& targetPoint);
+
+    static bool isValidPosition(float y, float x);
     bool isValidPosition();
 };

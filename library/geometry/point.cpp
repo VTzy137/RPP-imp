@@ -66,6 +66,10 @@ bool Point::canMoveTo(const Point& targetPoint) {
     return canMoveTo(targetPoint.y, targetPoint.x);
 }
 
+bool Point::isValidPosition(float y, float x) {
+    return stillOnMap(y, x) && canMoveTo(y, x);
+}
+
 bool Point::isValidPosition() {
     return stillOnMap() && canMoveTo(*this);
 }
