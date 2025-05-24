@@ -9,14 +9,13 @@ UseTab: Never
 
 # Wrapping & Braces
 ColumnLimit: 100
-BreakBeforeBraces: Attach
-AllowShortIfStatementsOnASingleLine: true
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: false
 
 # Spacing
 SpaceBeforeParens: ControlStatements
-# SpacesInEmptyParentheses: false
 SpacesInAngles: false
 PointerAlignment: Left
 
@@ -24,4 +23,4 @@ PointerAlignment: Left
 SortIncludes: true
 
 # Cleanup
-MaxEmptyLinesToKeep: 1
+MaxEmptyLinesToKeep: 2
