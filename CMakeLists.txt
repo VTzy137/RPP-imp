@@ -4,8 +4,8 @@ project(RPP-imp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add optimization flag
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+# add_compile_options(-mfpath=sse -ffast-math)
 
 file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "library/**/*.cpp")
 
@@ -25,7 +25,6 @@ file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 add_definitions(-DASSET_PATH=\"${CMAKE_SOURCE_DIR}/assets\")
 
-
 add_library(rpp_lib STATIC ${LIB_SOURCES})
  
 target_include_directories(rpp_lib PUBLIC
@@ -38,7 +37,6 @@ set(APP_SOURCES
 )
 
 add_executable(RPP-imp ${APP_SOURCES})
-
 target_link_libraries(RPP-imp PRIVATE 
     rpp_lib
     ${OPENGL_LIBRARIES}

@@ -1,4 +1,5 @@
 #include "function/algorithm.hpp"
+#include "evolution/mutation.hpp"
 #include "function/graph.hpp"
 #include "function/path.hpp"
 #include <cmath>
@@ -22,22 +23,26 @@ vtzy_types::path* aStar() {
             int y1 = y + vtzy_types::nearPoint[i][1];
             if (vtzy_types::visited[x1][y1] == 0 && path::checkValidPoint(x1, y1)) {
                 vtzy_types::visited[x1][y1] = past;
-                vtzy_types::gDistance[x1][y1] = vtzy_types::gDistance[x][y] + sqrt(abs(vtzy_types::nearPoint[i][0]) +
-                                                           abs(vtzy_types::nearPoint[i][1]));
-                aStar.insert(std::make_pair(vtzy_types::gDistance[x1][y1] + path::distanceToFinish(x1, y1),
-                                            std::make_pair(x1, y1)));
+                vtzy_types::gDistance[x1][y1] =
+                    vtzy_types::gDistance[x][y] +
+                    sqrt(abs(vtzy_types::nearPoint[i][0]) + abs(vtzy_types::nearPoint[i][1]));
+                aStar.insert(
+                    std::make_pair(vtzy_types::gDistance[x1][y1] + path::distanceToFinish(x1, y1),
+                                   std::make_pair(x1, y1)));
                 if (x1 == xFinish && y1 == yFinish) goto findSolution;
             } else if (path::checkValidPoint(x1, y1)) {
-                vtzy_types::gDistance[x1][y1] = std::min((float)vtzy_types::gDistance[x1][y1],
-                                             (float)vtzy_types::gDistance[x][y] +
-                                                 (float)sqrt((abs(vtzy_types::nearPoint[i][0]) +
-                                                              abs(vtzy_types::nearPoint[i][1]))));
+                vtzy_types::gDistance[x1][y1] =
+                    std::min((float)vtzy_types::gDistance[x1][y1],
+                             (float)vtzy_types::gDistance[x][y] +
+                                 (float)sqrt((abs(vtzy_types::nearPoint[i][0]) +
+                                              abs(vtzy_types::nearPoint[i][1]))));
             }
         }
     }
 
 findSolution:
-    vtzy_types::path* res = new vtzy_types::path(vtzy_types::gDistance[xFinish][yFinish], 0, nullptr);
+    vtzy_types::path* res =
+        new vtzy_types::path(vtzy_types::gDistance[xFinish][yFinish], 0, nullptr);
     vtzy_types::point* p = new vtzy_types::point((float)xFinish, (float)yFinish, nullptr);
     int stop = 1000;
     while (--stop > 0) {
@@ -53,13 +58,12 @@ findSolution:
     return res;
 }
 
-
 void decreaseDimension() {
     for (int i = 0; i < vtzy_types::numPopulations; ++i) {
         vtzy_types::point* p = vtzy_types::population[i]->begin->next;
         while (p->next != nullptr && p->next->next != nullptr) {
             float eDis = graph::euclideanDistance(p, p->next),
-                  angle = path::angleThreePoint(p, p->next, p->next->next);
+                  angle = path::turnAngle(p, p->next, p->next->next);
             if (eDis < 15 && eDis > 3 && angle < 0.003) p->next = p->next->next;
             p = p->next;
         }
@@ -108,20 +112,24 @@ void updateBestPath() {
 
 void updateV(int i) {
     int j = 1;
-    vtzy_types::point *p = vtzy_types::population[i]->begin->next, *pp = vtzy_types::pPath[i]->begin->next;
+    vtzy_types::point *p = vtzy_types::population[i]->begin->next,
+                      *pp = vtzy_types::pPath[i]->begin->next;
     while (p->next != nullptr) {
-        vtzy_types::v[i][j][0] = vtzy_types::w0PSO * vtzy_types::v[i][j][0] + vtzy_types::w1PSO * (pp->x - p->x);
-        vtzy_types::v[i][j][1] = vtzy_types::w0PSO * vtzy_types::v[i][j][1] + vtzy_types::w1PSO * (pp->y - p->y);
+        vtzy_types::v[i][j][0] =
+            vtzy_types::w0PSO * vtzy_types::v[i][j][0] + vtzy_types::w1PSO * (pp->x - p->x);
+        vtzy_types::v[i][j][1] =
+            vtzy_types::w0PSO * vtzy_types::v[i][j][1] + vtzy_types::w1PSO * (pp->y - p->y);
         ++j;
         p = p->next;
         pp = pp->next;
     }
-    }
+}
 
 void PSOmigrate() {
     for (int i = 0; i < vtzy_types::numPopulations; i++) {
         vtzy_types::point *p1 = vtzy_types::population[i]->begin, *p = p1->next;
         std::pair<float, float> q;
+
         while (p != nullptr && p->next != nullptr) {
             int x = (int)p->x, y = (int)p->y;
             p->x = p->x * 0.8 + (p->next->x + p1->x) * 10 / 100;
@@ -134,15 +142,15 @@ void PSOmigrate() {
             };
             if (path::checkValidPoint(p) == false)
                 if (vtzy_types::normalDirect[i])
-                    path::normalLine(p1, p, p->next);
+                    path::smallerAngle(p1, p, p->next);
                 else
-                    path::normalLine(p->next, p, p1);
+                    path::smallerAngle(p->next, p, p1);
 
             if (graph::euclideanDistance(p, p1) > 7) {
                 p1->next = new vtzy_types::point((p->x + p1->x) / 2, (p->y + p1->y) / 2, p1->next);
                 p1 = p1->next;
             } else if (graph::euclideanDistance(p, p1) < 3 &&
-                       path::angleThreePoint(p1, p, p->next) < 0.2) {
+                       path::turnAngle(p1, p, p->next) < 0.2) {
                 p1->next = p->next;
                 p = p1->next;
             } else {
@@ -165,25 +173,6 @@ void PSO() {
             p = p->next;
         }
     }
-}
-
-float est = 1.5;
-vtzy_types::path* mutation(vtzy_types::path* p, float toiu) {
-    vtzy_types::point *tmp = p->begin, *offPoint = new vtzy_types::point(tmp->x, tmp->y, nullptr);
-    vtzy_types::path* offspring = new vtzy_types::path(offPoint);
-    tmp = tmp->next;
-    float keke = rand() % (int)(vtzy_types::pathLen * est / 4), x1 = (rand() % 200 - 100) / (toiu),
-          y1 = (rand() % 200 - 100) / (toiu), stt = 0, posPoint = rand() % (vtzy_types::pathLen + 6) - 3;
-    while (tmp->next != nullptr) {
-        float wei = 1 - std::min(1.0f, std::abs(stt++ - posPoint) / keke);
-        offPoint->next = new vtzy_types::point(tmp->x + x1 * wei, tmp->y + y1 * wei, nullptr);
-        if (path::checkValidLine(offPoint, offPoint->next) == false) return p;
-        offPoint = offPoint->next;
-        tmp = tmp->next;
-    }
-    offPoint->next = new vtzy_types::point(tmp->x, tmp->y, nullptr);
-    path::pathFunc(offspring);
-    return offspring;
 }
 
 vtzy_types::path* combination1(vtzy_types::path* p, vtzy_types::path* q) {
@@ -229,7 +218,7 @@ vtzy_types::path* combination2(vtzy_types::path* p, vtzy_types::path* q) {
 void ES(float toiu) {
     for (int i = 0; i < vtzy_types::numPopulations; ++i) {
         vtzy_types::pathLen = path::pathLength(vtzy_types::population[i]);
-        vtzy_types::path* tmp = mutation(vtzy_types::population[i], toiu);
+        vtzy_types::path* tmp = Mutation::mutation(vtzy_types::population[i], toiu);
         if (path::compareTwoPath(tmp, vtzy_types::population[i]) > 0) {
             // if(tightlyDominantPath(tmp, population[i])){
             vtzy_types::population[i] = combination1(tmp, vtzy_types::pPath[i]);
@@ -242,8 +231,10 @@ void ES(float toiu) {
 void lastSocial() {
     for (int i = 0; i < vtzy_types::numPopulations; ++i) {
         for (int j = 0; j < vtzy_types::numPopulations; ++j) {
-            if (vtzy_types::population[i] == nullptr || vtzy_types::population[j] == nullptr) continue;
-            int tmp = path::tightlyDominantPath(vtzy_types::population[i], vtzy_types::population[j]);
+            if (vtzy_types::population[i] == nullptr || vtzy_types::population[j] == nullptr)
+                continue;
+            int tmp =
+                path::tightlyDominantPath(vtzy_types::population[i], vtzy_types::population[j]);
             if (tmp == 1)
                 vtzy_types::population[i] = nullptr;
             else if (tmp == -1)
@@ -255,7 +246,8 @@ void lastSocial() {
         if (vtzy_types::population[i] == nullptr) continue;
         vtzy_types::pPath[numPopu] = makeCopyPath(vtzy_types::population[i]);
         vtzy_types::population[numPopu] = makeCopyPath(vtzy_types::population[i]);
-        if (path::compareTwoPath(vtzy_types::pPath[numPopu], vtzy_types::gPath) > 0) vtzy_types::gPath = makeCopyPath(vtzy_types::pPath[numPopu]);
+        if (path::compareTwoPath(vtzy_types::pPath[numPopu], vtzy_types::gPath) > 0)
+            vtzy_types::gPath = makeCopyPath(vtzy_types::pPath[numPopu]);
         numPopu++;
     }
     vtzy_types::numPopulations = numPopu;
@@ -267,7 +259,8 @@ void saveExe() {
     for (int i = 0; i < vtzy_types::numPopulations; ++i) {
         path::pathFunc(vtzy_types::population[i]);
         for (int j = 0; j < i; ++j) {
-            if (vtzy_types::population[i] == nullptr || vtzy_types::population[j] == nullptr) continue;
+            if (vtzy_types::population[i] == nullptr || vtzy_types::population[j] == nullptr)
+                continue;
             int tmp = path::compareBadPath(vtzy_types::population[i], vtzy_types::population[j]);
             // int tmp = path::tightlyDominantPath(population[j], population[i]);
             if (tmp == 1)
@@ -291,21 +284,4 @@ void saveExe() {
     // cout << "Number of " << numPopulations << endl;
 }
 
-void PSOES(float toiu, int loop) {
-    int showloop = 20;
-    for (int i = 0; i < loop; ++i) {
-        est += 0.7 / loop;
-        toiu += 30.0 / loop;
-        // if(i < loop/10) ES(toiu/10);
-        if (i < loop / 4)
-            PSOmigrate();
-        else if (i == loop / 4) {
-            saveExe();
-        } else {
-            ES(toiu);
-            PSO();
-            updateBestPath();
-        }
-    }
-}
 } // namespace algorithm

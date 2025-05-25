@@ -1,6 +1,5 @@
 #include "geometry/point.hpp"
 #include "geometry/map.hpp"
-#include "global_state.hpp"
 #include <cmath>
 
 float Point::chebyshevDistanceTo(float y, float x) const
@@ -119,11 +118,10 @@ std::pair<float, float> gradientPoint(float x, float y)
         return std::make_pair(x, y);
     for (int i = 0; i < 8; ++i)
     {
-        if (vtzy_types::mapGradient[x1 + vtzy_types::nearPoint[i][0] * 2]
-                                   [y1 + vtzy_types::nearPoint[i][1] * 2] < cur)
+        if (Map::mapGradient[x1 + Map::nearPoint[i][0] * 2][y1 + Map::nearPoint[i][1] * 2] < cur)
         {
-            cur = vtzy_types::mapGradient[x1 + vtzy_types::nearPoint[i][0] * 2]
-                                         [y1 + vtzy_types::nearPoint[i][1] * 2];
+            cur = Map::mapGradient[x1 + Map::nearPoint[i][0] * 2]
+                                  [y1 + vtzy_types::nearPoint[i][1] * 2];
             ne = i;
         }
     }

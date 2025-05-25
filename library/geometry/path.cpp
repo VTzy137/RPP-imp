@@ -1,22 +1,39 @@
 #include "geometry/path.hpp"
 #include "geometry/map.hpp"
 #include "geometry/point.hpp"
-#include "global_state.hpp"
+#include "global_type.hpp"
 #include <cmath>
 
-
-bool Path::betterPath(const Path& reference, const Path& other)
+bool Path::isBetterThan(const Path& other, float weight = 2.5f) const
 {
-    float angle = other.angle - reference.angle;
-    float distance = other.distance - reference.distance;
-    return angle / other.angle + 2.5 * distance / other.distance;
+    float diffAngle = this->angle - other.angle;
+    float diffDistance = this->distance - other.distance;
+    return diffAngle + weight * diffDistance < 0;
 }
 
-bool Path::betterPath(const Path& reference, const Path& other, float weight)
+bool Path::betterPath(const Path& reference, const Path& other, float weight = 2.5f)
 {
-    float angle = other.angle - reference.angle;
-    float distance = other.distance - reference.distance;
-    return weight * angle / other.angle + 2.5 * distance / other.distance;
+    float diffAngle = reference.angle - other.angle;
+    float diffDistance = reference.distance - other.distance;
+    return diffAngle + weight * diffDistance > 0;
+}
+
+int Path::numTargetBetterThan(const Path& other, float weight) const
+{
+    int numBetter = 0;
+    if (this->angle < other.angle)
+        numBetter++;
+    if (this->distance < other.distance)
+        numBetter++;
+    if (this->risk < other.risk)
+        numBetter++;
+    return numBetter;
+}
+
+int Path::numTargetBetterPath(const Path& reference, const Path& other, float weight)
+{
+    float diffAngle = reference.angle - other.angle;
+    float diffDistance = reference.distance - other.distance;
 }
 
 int compareSamePath(Path& a, Path& b)
@@ -32,6 +49,7 @@ int compareSamePath(Path& a, Path& b)
     return 0;
 }
 
+
 int compareBadPath(vtzy_types::path* a, vtzy_types::path* b)
 {
     float res = abs(a->angle - b->angle) / (a->angle + b->angle) +
@@ -46,6 +64,7 @@ int compareBadPath(vtzy_types::path* a, vtzy_types::path* b)
     return 0;
 }
 
+
 int dominantPath(vtzy_types::path* a, vtzy_types::path* b)
 {
     if (a->angle * 1.02 < b->angle && a->distance * 1.05 < b->distance &&
@@ -57,6 +76,7 @@ int dominantPath(vtzy_types::path* a, vtzy_types::path* b)
     return 0;
 }
 
+
 int tightlyDominantPath(vtzy_types::path* a, vtzy_types::path* b)
 {
     if (a->angle < b->angle && a->distance < b->distance)
@@ -65,6 +85,7 @@ int tightlyDominantPath(vtzy_types::path* a, vtzy_types::path* b)
         return 1;
     return 0;
 }
+
 
 int pathLength(vtzy_types::path* p)
 {
@@ -77,6 +98,7 @@ int pathLength(vtzy_types::path* p)
     }
     return len;
 }
+
 
 void pathFunc(vtzy_types::path* path)
 {
@@ -103,6 +125,7 @@ void pathFunc(vtzy_types::path* path)
     path->distance = distance;
     path->angle = std::max(1.0f, angle);
 }
+
 
 void pathFunc1(vtzy_types::path* path)
 {

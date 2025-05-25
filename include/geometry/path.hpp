@@ -10,27 +10,27 @@ class Path
 
     float distance;
     float angle;
-    float safety;
+    float risk;
     std::shared_ptr<Point> begin;
 
-    Path() : distance(MAX_VALUE), angle(MAX_VALUE), safety(0.0f), begin(nullptr)
+    Path() : distance(MAX_VALUE), angle(MAX_VALUE), risk(0.0f), begin(nullptr)
     {
     }
 
     explicit Path(std::shared_ptr<Point> startPoint)
-        : distance(MAX_VALUE), angle(MAX_VALUE), safety(0.0f), begin(startPoint)
+        : distance(MAX_VALUE), angle(MAX_VALUE), risk(0.0f), begin(startPoint)
     {
     }
 
-    Path(float pathDistance, float pathAngle, float pathSafety, std::shared_ptr<Point> startPoint)
-        : distance(pathDistance), angle(pathAngle), safety(pathSafety), begin(startPoint)
+    Path(float pathDistance, float pathAngle, float pathRisk, std::shared_ptr<Point> startPoint)
+        : distance(pathDistance), angle(pathAngle), risk(pathRisk), begin(startPoint)
     {
     }
 
-    bool isBetterThan(const Path& other) const;
     bool isBetterThan(const Path& other, float weight) const;
-    static bool betterPath(const Path& a, const Path& b);
-    static bool betterPath(const Path& a, const Path& b, float weight);
+    static bool betterPath(const Path& reference, const Path& other, float weight);
+    int numTargetBetterThan(const Path& other, float weight) const;
+    static int numTargetBetterPath(const Path& reference, const Path& other, float weight);
 
     static int compareSamePath(const Path& a, const Path& b);
     static int compareBadPath(const Path& a, const Path& b);

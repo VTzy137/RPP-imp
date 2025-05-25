@@ -1,6 +1,64 @@
 #include "UI/openGl.hpp"
+#include <thread>
 
 namespace OpenGLUI {
+GLFWwindow* initOpenGL() {
+    if (!glfwInit()) return nullptr;
+
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Animated 2D Paths", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return nullptr;
+    }
+
+    glfwMakeContextCurrent(window);
+    glOrtho(-1, 1, -1, 1, -1, 1); // Set 2D view
+    return window;
+}
+
+void drawPoint(vtzy_types::point* point) {
+    glPointSize(10.0f);
+    glBegin(GL_POINTS);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2f(point->x, point->y);
+    glEnd();
+}
+
+void drawLine(vtzy_types::point* point1, vtzy_types::point* point2) {
+    glBegin(GL_LINES);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(point1->x, point1->y);
+    glVertex2f(point2->x, point2->y);
+    glEnd();
+}
+
+void drawPath(vtzy_types::path* path) {
+    vtzy_types::point* tmp = path->begin;
+
+    while (tmp != nullptr && tmp->next != nullptr) {
+        drawLine(tmp, tmp->next);
+
+        drawPoint(tmp);
+        drawPoint(tmp->next);
+
+        glfwSwapBuffers(glfwGetCurrentContext());
+
+        tmp = tmp->next;
+    }
+
+    // Draw final point if it exists
+    if (tmp != nullptr) {
+        glPointSize(10.0f);
+        glBegin(GL_POINTS);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(tmp->x, tmp->y);
+        glEnd();
+        glfwSwapBuffers(glfwGetCurrentContext());
+    }
+}
+
+} // namespace OpenGLUI
+
 void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height,
                    std::atomic<bool>& running) {
     if (!glfwInit()) {
@@ -41,4 +99,9 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
     glfwTerminate();
 }
 
+void drawPoint(vtzy_types::point* point) {
+    glPointSize(15.0f);
+    glBegin(GL_POINTS);
+    glVertex2f(point->x, point->y);
+    glEnd();
 } // namespace OpenGLUI

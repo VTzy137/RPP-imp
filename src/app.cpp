@@ -6,10 +6,8 @@
 #include <iostream>
 
 /**
- * @brief Runs the main application logic for RPP-imp.
- *
- * This function is responsible for initializing and executing the core logic of the application.
- */
+ * @VTzy137
+*/
 void runApp() {
     std::cout << "Running app logic..." << std::endl;
 }

@@ -1,4 +1,4 @@
-#include "evolution/genetic.h"
+#include "evolution/genetic.hpp"
 
 #include <algorithm>
 #include <iostream>

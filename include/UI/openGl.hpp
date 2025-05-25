@@ -1,14 +1,18 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <utility>
 #include <atomic>
+#include <iostream>
+#include <utility>
+#include <vector>
 
 #include <mutex>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "types.hpp"
 
 namespace OpenGLUI {
-    void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height, std::atomic<bool>& running);
-}
+GLFWwindow* initOpenGL();
+void drawPoint(vtzy_types::point* point);
+void drawLine(vtzy_types::point* point1, vtzy_types::point* point2);
+void drawPath(vtzy_types::path* path);
+} // namespace OpenGLUI
