@@ -1,43 +1,80 @@
 #pragma once
+
+#include "geometry/point.hpp"
 #include "geometry/vector.hpp"
 #include <limits>
 #include <memory>
+#include <vector>
 
 class Path
 {
+  private:
+    static bool eligibleToRemoveNextPoint(Point& begin, Point& middle);
+
   public:
+    inline static int populationMax = 100;
+    inline static Path *currPath, *gPath;
+    inline static std::vector<Path> pPath, population;
     inline static constexpr float MAX_VALUE = 1e7f;
+
+    bool alive = true;
 
     float distance;
     float angle;
     float risk;
-    std::shared_ptr<Point> begin;
+    Point* begin;
+
+    Path(const Path& other) : distance(other.distance), angle(other.angle), risk(other.risk)
+    {
+        if (!other.begin)
+        {
+            this->begin = nullptr;
+            return;
+        }
+
+        this->begin = new Point(other.begin->y, other.begin->x, nullptr);
+        auto currentCopy = this->begin;
+        auto currentOrig = other.begin->nextPoint;
+
+        while (currentOrig)
+        {
+            currentCopy->nextPoint = new Point(currentOrig->y, currentOrig->x, nullptr);
+            currentCopy = currentCopy->nextPoint;
+            currentOrig = currentOrig->nextPoint;
+        }
+    }
 
     Path() : distance(MAX_VALUE), angle(MAX_VALUE), risk(0.0f), begin(nullptr)
     {
     }
 
-    explicit Path(std::shared_ptr<Point> startPoint)
-        : distance(MAX_VALUE), angle(MAX_VALUE), risk(0.0f), begin(startPoint)
+    explicit Path(Point* startPoint) : distance(MAX_VALUE), angle(MAX_VALUE), risk(0.0f), begin(startPoint)
     {
     }
 
-    Path(float pathDistance, float pathAngle, float pathRisk, std::shared_ptr<Point> startPoint)
+    Path(float pathDistance, float pathAngle, float pathRisk, Point* startPoint)
         : distance(pathDistance), angle(pathAngle), risk(pathRisk), begin(startPoint)
     {
     }
 
-    bool isBetterThan(const Path& other, float weight) const;
-    static bool betterPath(const Path& reference, const Path& other, float weight);
-    int numTargetBetterThan(const Path& other, float weight) const;
-    static int numTargetBetterPath(const Path& reference, const Path& other, float weight);
 
-    static int compareSamePath(const Path& a, const Path& b);
-    static int compareBadPath(const Path& a, const Path& b);
-    static int dominantPath(const Path& a, const Path& b);
-    static int tightlyDominantPath(const Path& a, const Path& b);
-    static std::pair<float, float> gradientPoint(float x, float y);
-    static std::pair<float, float> gradientPointTightly(float x, float y);
-    static int pathLength(const Path& p);
-    static void pathFunc(Path& path);
+    int numPoints() const;
+
+    static float angleThreshold;
+    void simplifyPath();
+
+    static float weightBetterAngle, weightBetterDistance, weightBetterRisk;
+    bool isBetterThan(const Path& other) const;
+    static bool betterPath(const Path& reference, const Path& other);
+    int numTargetBetterThan(const Path& other) const;
+    static int numTargetBetterPath(const Path& reference, const Path& other);
+
+    static float weightSameAngle, weightSameDistance, weightSameRisk;
+    bool isSamePath(const Path& other) const;
+    static bool areTwoPathSame(const Path& reference, const Path& other);
+
+    float isSuperiorThan(const Path& other) const;
+    static bool dominantPath(const Path& reference, const Path& other);
+
+    void calculatePathTargetScore();
 };

@@ -5,12 +5,12 @@ class Point
 {
   public:
     float x, y;
-    std::shared_ptr<Point> nextPoint;
+    Point* nextPoint;
 
     Point() : x(0), y(0), nextPoint(nullptr)
     {
     }
-    Point(float xPosition, float yPosition, std::shared_ptr<Point> nextPointPtr = nullptr)
+    Point(float xPosition, float yPosition, Point* nextPointPtr = nullptr)
         : x(xPosition), y(yPosition), nextPoint(nextPointPtr)
     {
     }
@@ -30,6 +30,14 @@ class Point
     static bool canMoveTo(float targetY, float targetX);
     static bool canMoveTo(const Point& targetPoint);
 
+    static int gradientRisk(int y, int x);
+    static int gradientRisk(float y, float x);
+    int gradientRisk() const;
+
     static bool isValidPosition(float y, float x);
     bool isValidPosition();
+
+    static float moveSpeedRatio;
+    void moveToLowerGradient();
+    void moveToLowerGradientTightly();
 };

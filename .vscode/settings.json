@@ -15,6 +15,10 @@
     "bitset": "cpp",
     "istream": "cpp",
     "chrono": "cpp",
-    "limits": "cpp"
+    "limits": "cpp",
+    "random": "cpp",
+    "memory": "cpp",
+    "functional": "cpp",
+    "ranges": "cpp"
   }
 }

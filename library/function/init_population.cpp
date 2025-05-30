@@ -1,45 +1,33 @@
-#include "function/init_population.hpp"
-#include "function/graph.hpp"
+#include "geometry/map.hpp"
 #include <cmath>
 #include <iostream>
+#include <random>
 
-namespace init_population {
-bool initRandPath(vtzy_types::point* startPoint, vtzy_types::point* endPoint) {
-    constexpr float MIN_COORDINATE = 3.0f;
-    constexpr float STEP_SIZE = 20.0f;
-    constexpr int CURVE_AMPLITUDE_RANGE = 40;
-    constexpr int CURVE_AMPLITUDE_OFFSET = 25;
 
-    float distance = graph::euclideanDistance(startPoint, endPoint);
-    float startX = startPoint->x;
-    float startY = startPoint->y;
+namespace init_population
+{
 
-    float directionX = (endPoint->x - startX) / distance;
-    float directionY = (endPoint->y - startY) / distance;
-
-    int curveIntensity = rand() % CURVE_AMPLITUDE_RANGE - CURVE_AMPLITUDE_OFFSET;
-
-    // std::cout << std::endl;
-    // std::cout << "Population " << " path: " << std::endl;
-    vtzy_types::point* currentPoint = startPoint;
-    for (float step = 0; step < distance; step += STEP_SIZE) {
-        float distanceRatio = (step - distance / 2) / distance;
-        float curveFactor = 1 - pow(distanceRatio, 2);
-
-        float newX = startX + step * directionX - curveIntensity * directionY * curveFactor;
-        float newY = startY + step * directionY + curveIntensity * directionX * curveFactor;
-
-        newX = std::max(MIN_COORDINATE, newX);
-        newY = std::max(MIN_COORDINATE, newY);
-
-        // std::cout << newX << " " << newY << std::endl;
-        currentPoint->next = new vtzy_types::point(newX, newY, nullptr);
-        currentPoint = currentPoint->next;
+bool initRandPath(Point* p, Point* q)
+{
+    double xBegin = p->x, yBegin = p->y, dis = Vector::euclideanLength(*p, *q);
+    double cos = (q->x - xBegin) / dis, sin = (q->y - yBegin) / dis;
+    int rrr = std::rand() % 40 - 25;
+    // rrr=0;
+    for (double j = 0; j < dis; j += 20)
+    {
+        // double tmp, tmp1;
+        p->nextPoint =
+            new Point(std::max(3.0, xBegin + j * cos - rrr * sin * (1 - pow((j - dis / 2) / dis, 2))),
+                      std::max(3.0, yBegin + j * sin + rrr * cos * (1 - pow((j - dis / 2) / dis, 2))), nullptr);
+        // line(img, Point(convx(p->x), convy(p->y)), Point(convx(p->next->x), convy(p->next->y)), Scalar((120, 0, 255),
+        // 1));
+        p = p->nextPoint;
     }
-
-    // std::cout << std::endl;
-    currentPoint->next = endPoint;
-
-    return (curveIntensity < 0);
+    p->nextPoint = q;
+    return (rrr < 0);
+    // line(img, Point(convx(p->x), convy(p->y)), Point(convx(p->next->x), convy(p->next->y)), Scalar((120, 0, 255),
+    // 1));
 }
+
 } // namespace init_population
+ 

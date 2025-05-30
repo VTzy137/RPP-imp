@@ -1,10 +1,13 @@
 #include "utils/input.hpp"
+#include "geometry/map.hpp"
+#include "geometry/path.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-void Input::readMap() {
+void Input::readMap()
+{
     constexpr int SCALE_FACTOR = 2;
     const std::string configPath = std::string(ASSET_PATH) + "/";
     const int numInput = 1;
@@ -12,57 +15,63 @@ void Input::readMap() {
     const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
     std::ifstream mapFile(mapFilePath);
 
-    if (!mapFile.is_open()) {
+    if (!mapFile.is_open())
+    {
         std::cerr << "Error: Could not open input file: " << mapFilePath << std::endl;
         return;
     }
 
-    const std::string outputFilePath =
-        configPath + "output/out" + std::to_string(numInput) + ".txt";
+    const std::string outputFilePath = configPath + "output/out" + std::to_string(numInput) + ".txt";
     std::cout << mapFilePath << std::endl << outputFilePath << std::endl;
-    std::cout << "yes" << std::endl;
 
-    vtzy_types::start = new vtzy_types::point();
-    vtzy_types::finish = new vtzy_types::point();
+    Map::startPoint = Point();
+    Map::finishPoint = Point();
 
-    mapFile >> vtzy_types::mapHeight >> vtzy_types::mapWidth;
-    mapFile >> vtzy_types::start->x >> vtzy_types::start->y >> vtzy_types::finish->x >>
-        vtzy_types::finish->y;
-    mapFile >> vtzy_types::numObstacle;
+    mapFile >> Map::mapHeight >> Map::mapWidth;
+    mapFile >> Map::startPoint.x >> Map::startPoint.y >> Map::finishPoint.x >> Map::finishPoint.y;
+    mapFile >> Map::numObstacle;
 
-    vtzy_types::start->x *= SCALE_FACTOR;
-    vtzy_types::start->y *= SCALE_FACTOR;
-    vtzy_types::finish->x *= SCALE_FACTOR;
-    vtzy_types::finish->y *= SCALE_FACTOR;
-    vtzy_types::mapHeight *= SCALE_FACTOR;
-    vtzy_types::mapWidth *= SCALE_FACTOR;
+    std::cout << Map::mapHeight << " " << Map::mapWidth << std::endl;
+    std::cout << Map::startPoint.x << " " << Map::startPoint.y << " " << Map::finishPoint.x << " " << Map::finishPoint.y
+              << std::endl;
+    std::cout << Map::numObstacle << std::endl;
+
+    Map::startPoint.x *= SCALE_FACTOR;
+    Map::startPoint.y *= SCALE_FACTOR;
+    Map::finishPoint.x *= SCALE_FACTOR;
+    Map::finishPoint.y *= SCALE_FACTOR;
+    Map::mapHeight *= SCALE_FACTOR;
+    Map::mapWidth *= SCALE_FACTOR;
 
     std::string line;
-    for (int i = 0; i < vtzy_types::numObstacle; ++i) {
+    for (int i = 0; i < Map::numObstacle; ++i)
+    {
         mapFile.ignore();
         std::getline(mapFile, line);
+        std::cout << line << std::endl;
 
         std::stringstream ss(line);
         float x, y;
-        while (ss >> x) {
+        while (ss >> x)
+        {
             ss >> y;
+            std::cout << x << " " << y << std::endl;
+            std::cout << ss.str() << std::endl;
             x *= SCALE_FACTOR;
             y *= SCALE_FACTOR;
-            vtzy_types::obstacles[i] = new vtzy_types::point(x, y, vtzy_types::obstacles[i]);
+            Map::obstacles[i] = new Point(x, y, Map::obstacles[i]);
         }
     }
 
-    const float mapWidth = vtzy_types::mapWidth;
-    const float mapHeight = vtzy_types::mapHeight;
+    const float mapWidth = Map::mapWidth;
+    const float mapHeight = Map::mapHeight;
 
-    vtzy_types::obstacles[vtzy_types::numObstacle] =
-        new vtzy_types::point(0, 0, vtzy_types::obstacles[vtzy_types::numObstacle]);
-    vtzy_types::obstacles[vtzy_types::numObstacle] =
-        new vtzy_types::point(mapWidth, 0, vtzy_types::obstacles[vtzy_types::numObstacle]);
-    vtzy_types::obstacles[vtzy_types::numObstacle] =
-        new vtzy_types::point(mapWidth, mapHeight, vtzy_types::obstacles[vtzy_types::numObstacle]);
-    vtzy_types::obstacles[vtzy_types::numObstacle] =
-        new vtzy_types::point(0, mapHeight, vtzy_types::obstacles[vtzy_types::numObstacle]);
 
-    ++vtzy_types::numObstacle;
+    Map::obstacles[Map::numObstacle] = new Point(0, 0, Map::obstacles[Map::numObstacle]);
+    Map::obstacles[Map::numObstacle] = new Point(mapWidth, 0, Map::obstacles[Map::numObstacle]);
+    Map::obstacles[Map::numObstacle] = new Point(mapWidth, mapHeight, Map::obstacles[Map::numObstacle]);
+    Map::obstacles[Map::numObstacle] = new Point(0, mapHeight, Map::obstacles[Map::numObstacle]);
+    std::cout << "read map" << std::endl;
+
+    ++Map::numObstacle;
 }

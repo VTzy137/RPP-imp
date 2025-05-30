@@ -1,7 +1,6 @@
 #pragma once
 
-#include "types.hpp"
-
-namespace Input {
+namespace Input
+{
 void readMap();
 }

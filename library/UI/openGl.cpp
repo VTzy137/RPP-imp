@@ -1,12 +1,17 @@
 #include "UI/openGl.hpp"
+#include "geometry/path.hpp"
 #include <thread>
 
-namespace OpenGLUI {
-GLFWwindow* initOpenGL() {
-    if (!glfwInit()) return nullptr;
+namespace OpenGLUI
+{
+GLFWwindow* initOpenGL()
+{
+    if (!glfwInit())
+        return nullptr;
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Animated 2D Paths", NULL, NULL);
-    if (!window) {
+    if (!window)
+    {
         glfwTerminate();
         return nullptr;
     }
@@ -16,7 +21,8 @@ GLFWwindow* initOpenGL() {
     return window;
 }
 
-void drawPoint(vtzy_types::point* point) {
+void drawPoint(Point* point)
+{
     glPointSize(10.0f);
     glBegin(GL_POINTS);
     glColor3f(1.0f, 0.0f, 0.0f);
@@ -24,7 +30,8 @@ void drawPoint(vtzy_types::point* point) {
     glEnd();
 }
 
-void drawLine(vtzy_types::point* point1, vtzy_types::point* point2) {
+void drawLine(Point* point1, Point* point2)
+{
     glBegin(GL_LINES);
     glColor3f(0.0f, 1.0f, 0.0f);
     glVertex2f(point1->x, point1->y);
@@ -32,22 +39,25 @@ void drawLine(vtzy_types::point* point1, vtzy_types::point* point2) {
     glEnd();
 }
 
-void drawPath(vtzy_types::path* path) {
-    vtzy_types::point* tmp = path->begin;
+void drawPath(Path* path)
+{
+    Point* tmp = path->begin;
 
-    while (tmp != nullptr && tmp->next != nullptr) {
-        drawLine(tmp, tmp->next);
+    while (tmp != nullptr && tmp->nextPoint != nullptr)
+    {
+        OpenGLUI::drawLine(tmp, tmp->nextPoint);
 
-        drawPoint(tmp);
-        drawPoint(tmp->next);
+        OpenGLUI::drawPoint(tmp);
+        OpenGLUI::drawPoint(tmp->nextPoint);
 
         glfwSwapBuffers(glfwGetCurrentContext());
 
-        tmp = tmp->next;
+        tmp = tmp->nextPoint;
     }
 
     // Draw final point if it exists
-    if (tmp != nullptr) {
+    if (tmp != nullptr)
+    {
         glPointSize(10.0f);
         glBegin(GL_POINTS);
         glColor3f(1.0f, 0.0f, 0.0f);
@@ -59,15 +69,17 @@ void drawPath(vtzy_types::path* path) {
 
 } // namespace OpenGLUI
 
-void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height,
-                   std::atomic<bool>& running) {
-    if (!glfwInit()) {
+void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height, std::atomic<bool>& running)
+{
+    if (!glfwInit())
+    {
         std::cerr << "Failed to init GLFW\n";
         return;
     }
 
     GLFWwindow* window = glfwCreateWindow(width, height, "Line Viewer", nullptr, nullptr);
-    if (!window) {
+    if (!window)
+    {
         glfwTerminate();
         return;
     }
@@ -76,7 +88,8 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
     glewExperimental = true;
     glewInit();
 
-    while (!glfwWindowShouldClose(window) && running) {
+    while (!glfwWindowShouldClose(window) && running)
+    {
         glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -86,7 +99,8 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
 
         glColor3f(0.0f, 1.0f, 0.0f);
         glBegin(GL_LINE_STRIP);
-        for (const auto& p : line) {
+        for (const auto& p : line)
+        {
             glVertex2f(p.first, p.second);
         }
         glEnd();
@@ -99,7 +113,8 @@ void drawLineStrip(std::vector<std::pair<int, int>>& line, int width, int height
     glfwTerminate();
 }
 
-void drawPoint(vtzy_types::point* point) {
+void drawPoint(Point* point)
+{
     glPointSize(15.0f);
     glBegin(GL_POINTS);
     glVertex2f(point->x, point->y);

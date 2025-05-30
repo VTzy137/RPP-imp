@@ -8,7 +8,7 @@ TabWidth: 4
 UseTab: Never
 
 # Wrapping & Braces
-ColumnLimit: 100
+ColumnLimit: 120
 BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false

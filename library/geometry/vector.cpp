@@ -1,7 +1,7 @@
 #include "geometry/vector.hpp"
+#include "geometry/map.hpp"
+#include "global_type.hpp"
 #include <cmath>
-
-const Point Vector::originPoint{0.0f, 0.0f};
 
 
 float squaredEuclideanDistance(const Point& begin, const Point& end)
@@ -40,8 +40,10 @@ float Vector::turnAngle(const Point& A, const Point& B, const Point& C)
     float BA_x = A.x - B.x;
     float BC_y = C.y - B.y;
     float BC_x = C.x - B.x;
+
     float dot = BA_x * BC_x + BA_y * BC_y;
     float cross = std::fabs(BA_x * BC_y - BA_y * BC_x);
+
     return atan2(cross, dot);
 }
 
@@ -56,8 +58,7 @@ void Vector::offsetMiddleToReduceBend(const Point& begin, Point& middle, const P
 }
 
 
-void Vector::offsetMiddleToReduceBend(const Point& begin, Point& middle, const Point& end,
-                                      float divide)
+void Vector::offsetMiddleToReduceBend(const Point& begin, Point& middle, const Point& end, float divide)
 {
     float normalVector_y = (end.x - begin.x);
     float normalVector_x = -(end.y - begin.y);
@@ -66,7 +67,7 @@ void Vector::offsetMiddleToReduceBend(const Point& begin, Point& middle, const P
 }
 
 
-float Vector::shortThreshold = 1.0f;
+float Vector::shortThreshold = 3.0f;
 bool Vector::isTooShort(const Point& begin, const Point& end)
 {
     return euclideanLength(begin, end) < Vector::shortThreshold;
@@ -85,15 +86,17 @@ bool Vector::isTooShort()
 }
 
 
-float Vector::angleRatioThreshold = 0.1f;
+float Vector::angleRatioThreshold = 0.03f;
 bool Vector::isSmallAngle(const Point& A, const Point& B, const Point& C)
 {
     float AB_y = B.y - A.y;
     float AB_x = B.x - A.x;
     float BC_y = C.y - B.y;
     float BC_x = C.x - B.x;
+
     float normAB = fabs(AB_y) + fabs(AB_x);
     float normBC = fabs(BC_y) + fabs(BC_x);
+
     float cross = fabs(AB_x * BC_y - AB_y * BC_x);
     return cross < angleRatioThreshold * normAB * normBC;
 }
@@ -107,8 +110,8 @@ bool Vector::isValidVector(const Point& begin, const Point& end)
 
     float length = euclideanLength(begin, end);
 
-    float cos = (end.x - begin_x) / length;
     float sin = (end.y - begin_y) / length;
+    float cos = (end.x - begin_x) / length;
 
     for (float alongDistance = 0.0f; alongDistance <= length; alongDistance += distanceStep)
     {
@@ -118,4 +121,39 @@ bool Vector::isValidVector(const Point& begin, const Point& end)
             return false;
     }
     return true;
+}
+
+
+int Vector::minGradientThreshold = 800000;
+std::pair<float, float> Vector::vectorGradient(int y, int x, int threshold)
+{
+    int lowestGradient = Map::mapGradient[y][x];
+    if (lowestGradient < threshold)
+        return std::make_pair(y, x);
+    int vector_y = y, vector_x = x;
+    for (const auto& neighbor : GlobalType::neighbors)
+    {
+        int candidate_y = y + neighbor.dy;
+        int candidate_x = x + neighbor.dx;
+        if (Map::mapGradient[candidate_y][candidate_x] < lowestGradient)
+        {
+            vector_y = candidate_y;
+            vector_x = candidate_x;
+            lowestGradient = Map::mapGradient[candidate_y][candidate_x];
+        }
+    }
+
+    return std::make_pair(vector_y, vector_x);
+}
+
+
+std::pair<float, float> Vector::vectorGradient(float y, float x, int threshold)
+{
+    return vectorGradient(static_cast<int>(y), static_cast<int>(x));
+}
+
+
+std::pair<float, float> Vector::vectorGradientTightly(float y, float x)
+{
+    return vectorGradient(static_cast<int>(y), static_cast<int>(x), 0);
 }

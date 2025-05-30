@@ -1,0 +1,116 @@
+[
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/UI/openGl.cpp.o -c /home/vtzy/Documents/RPP-imp/library/UI/openGl.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/UI/openGl.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/UI/openGl.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/es.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/es.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/es.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/es.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/genetic.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/genetic.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/genetic.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/genetic.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/operator/combination.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/operator/combination.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/operator/combination.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/operator/combination.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/operator/mutation.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/operator/mutation.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/operator/mutation.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/operator/mutation.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/pso.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/pso.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/pso.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/pso.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/evolution/social.cpp.o -c /home/vtzy/Documents/RPP-imp/library/evolution/social.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/evolution/social.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/evolution/social.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/function/astar.cpp.o -c /home/vtzy/Documents/RPP-imp/library/function/astar.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/function/astar.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/function/astar.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/function/init_population.cpp.o -c /home/vtzy/Documents/RPP-imp/library/function/init_population.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/function/init_population.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/function/init_population.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/geometry/map.cpp.o -c /home/vtzy/Documents/RPP-imp/library/geometry/map.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/geometry/map.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/geometry/map.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/geometry/path.cpp.o -c /home/vtzy/Documents/RPP-imp/library/geometry/path.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/geometry/path.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/geometry/path.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/geometry/point.cpp.o -c /home/vtzy/Documents/RPP-imp/library/geometry/point.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/geometry/point.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/geometry/point.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/geometry/vector.cpp.o -c /home/vtzy/Documents/RPP-imp/library/geometry/vector.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/geometry/vector.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/geometry/vector.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/strategy/psoes.cpp.o -c /home/vtzy/Documents/RPP-imp/library/strategy/psoes.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/strategy/psoes.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/strategy/psoes.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/strategy/solution1.cpp.o -c /home/vtzy/Documents/RPP-imp/library/strategy/solution1.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/strategy/solution1.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/strategy/solution1.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/utils/hyperparameter.cpp.o -c /home/vtzy/Documents/RPP-imp/library/utils/hyperparameter.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/utils/hyperparameter.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/utils/hyperparameter.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/rpp_lib.dir/library/utils/input.cpp.o -c /home/vtzy/Documents/RPP-imp/library/utils/input.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/library/utils/input.cpp",
+  "output": "CMakeFiles/rpp_lib.dir/library/utils/input.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/RPP-imp.dir/src/main.cpp.o -c /home/vtzy/Documents/RPP-imp/src/main.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/src/main.cpp",
+  "output": "CMakeFiles/RPP-imp.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/vtzy/Documents/RPP-imp/build",
+  "command": "/usr/bin/c++ -DASSET_PATH=\\\"/home/vtzy/Documents/RPP-imp/assets\\\" -I/home/vtzy/Documents/RPP-imp/include -std=gnu++17 -o CMakeFiles/RPP-imp.dir/src/app.cpp.o -c /home/vtzy/Documents/RPP-imp/src/app.cpp",
+  "file": "/home/vtzy/Documents/RPP-imp/src/app.cpp",
+  "output": "CMakeFiles/RPP-imp.dir/src/app.cpp.o"
+}
+]

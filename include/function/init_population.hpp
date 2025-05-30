@@ -1,7 +1,10 @@
 #pragma once
 
-#include "types.hpp"
+#include "geometry/point.hpp"
+#include "geometry/path.hpp"
 
-namespace init_population {
-bool initRandPath(vtzy_types::point* p, vtzy_types::point* q);
-}
+namespace init_population
+{
+bool initRandPath(Point* p, Point* q);
+Path* AStarSearch();
+} // namespace init_population
