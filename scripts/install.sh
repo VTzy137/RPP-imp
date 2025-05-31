@@ -11,3 +11,4 @@ sudo apt-get update && sudo apt-get install -y \
     libglew-dev \
     libgl1-mesa-dev \
     nlohmann-json3-dev \
+    libopencv-dev

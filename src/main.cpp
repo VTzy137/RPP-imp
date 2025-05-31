@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "UI/openGl.hpp"
+#include "UI/opencv.hpp"
 #include "app.hpp"
 #include "strategy/solution.hpp"
 #include "utils/hyperparameter.hpp"
@@ -20,26 +20,26 @@
  */
 int main(int argc, char* argv[])
 {
+    std::cout << "=== OpenCV Visualization Demo ===" << std::endl;
 
     runApp();
 
     srand(time(0));
     clock_t startt = clock();
 
-    Input::readMap();
+    // Run the static demo
+    OpenCV::example();
 
-    solution1();
+    // Input::readMap();
 
-    // changeToInitGraph();
+    // solution1();
+
+    std::cout << "Demo complete! Press any key to exit..." << std::endl;
+    OpenCV::waitForKey();  // Wait for user input
+    OpenCV::closeWindow(); // Close the window
+
     clock_t endd = clock();
-    std::cout << std::endl << endd - startt;
-
-    // std::string configPath = std::string(ASSET_PATH) + "/config.json";
-    // std::ifstream file(std::string(ASSET_PATH) + "/config.json");
-    // Config cfg = load_config(configPath);
-    // std::cout << "Original mutation rate: " << cfg.mutation_rate << "\n";
-    // update_config(configPath, "mutation_rate", cfg.mutation_rate * 1.1);
-
+    std::cout << "Total execution time: " << (endd - startt) << " ms" << std::endl;
 
     return 0;
 }

@@ -2,6 +2,9 @@
     "configurations": [
         {
             "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/include"
+            ],
             "compileCommands": [
                 "${workspaceFolder}/build/compile_commands.json"
             ],

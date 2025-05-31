@@ -73,8 +73,7 @@ bool Point::stillOnMap()
 
 bool Point::canMoveTo(int yIndex, int xIndex)
 {
-    return Map::mapGradient[yIndex][xIndex] <= 1000000 && Map::mapGradient[yIndex + 1][xIndex + 1] <= 1000000 &&
-           Map::mapGradient[yIndex + 1][xIndex] <= 1000000 && Map::mapGradient[yIndex][xIndex + 1] <= 1000000;
+    return Map::mapGradient[yIndex][xIndex] <= 1000000;
 }
 
 bool Point::canMoveTo(float targetY, float targetX)

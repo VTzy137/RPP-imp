@@ -33,7 +33,6 @@ struct Vector
     static bool isValidVector(const Point& begin, const Point& end);
 
     static int minGradientThreshold;
-    static std::pair<float, float> vectorGradient(int y, int x, int threshold = minGradientThreshold);
     static std::pair<float, float> vectorGradient(float y, float x, int threshold = minGradientThreshold);
     static std::pair<float, float> vectorGradientTightly(float y, float x);
 };

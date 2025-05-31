@@ -3,10 +3,12 @@
 #include "evolution/operator/mutation.hpp"
 #include "evolution/pso.hpp"
 #include "evolution/social.hpp"
+#include <iostream>
 // #include "evolution/operator/combination.hpp"
 
 void PSOES(double toiu, int loop)
 {
+    std::cout << "loop: " << loop << std::endl;
     int showloop = 20;
     for (int i = 0; i < loop; ++i)
     {
@@ -17,6 +19,7 @@ void PSOES(double toiu, int loop)
             PSO::PSOmigrate();
         else if (i == loop / 4)
         {
+            std::cout << "start Social::saveExe()" << std::endl;
             Social::saveExe();
         }
         else

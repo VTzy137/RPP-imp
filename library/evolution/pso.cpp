@@ -1,6 +1,8 @@
 #include "evolution/pso.hpp"
 #include "geometry/path.hpp"
 #include "global_type.hpp"
+#include <iostream>
+#include <cmath>
 
 // Define static members
 Path* PSO::currPath = nullptr;
@@ -54,40 +56,50 @@ void PSO::updateBestPath()
 
 void PSO::PSOmigrate()
 {
+    std::cout << "start PSOmigrate" << std::endl;
     for (int i = 0; i < Path::population.size(); i++)
     {
         Point *p1 = Path::population[i].begin, *p = p1->nextPoint;
         std::pair<float, float> q;
         while (p != nullptr && p->nextPoint != nullptr)
         {
-            int x = (int)p->x, y = (int)p->y;
-            p->x = p->x * 0.8 + (p->nextPoint->x + p1->x) * 10 / 100;
-            p->y = p->y * 0.8 + (p->nextPoint->y + p1->y) * 10 / 100;
+            std::cout << "p: " << p->y << " " << p->x << std::endl;
+            int y = static_cast<int>(p->y), x = static_cast<int>(p->x);
+            p->y = p->y * 0.8f + (p->nextPoint->y + p1->y) * 0.1f;
+            p->x = p->x * 0.8f + (p->nextPoint->x + p1->x) * 0.1f;
+            std::cout << "p: " << p->y << " " << p->x << std::endl;
             q = Vector::vectorGradient(p->y, p->x);
-            p->x = p->x * 0.7 + q.first * 0.3;
-            p->y = p->y * 0.7 + q.second * 0.3;
-            if (!Point::isValidPosition(p->y, p->x))
+            p->y = p->y * 0.7 + q.first * 0.3;
+            p->x = p->x * 0.7 + q.second * 0.3;
+            if (!Point::stillOnMap(p->y, p->x))
             {
                 PSO::normalDirect[i] = !PSO::normalDirect[i];
             };
             if (!Point::isValidPosition(p->y, p->x))
+            {
+                std::cout << "invalid position" << std::endl;
                 if (PSO::normalDirect[i])
                     Vector::offsetMiddleToReduceBend(*p1, *p, *p->nextPoint);
                 else
                     Vector::offsetMiddleToReduceBend(*p->nextPoint, *p, *p1);
+            }
 
             if (p->euclideanDistanceTo(*p1) > 7)
             {
-                p1->nextPoint = new Point((p->x + p1->x) / 2, (p->y + p1->y) / 2);
+                std::cout << "p->euclideanDistanceTo(*p1) > 7" << std::endl;
+                p1->nextPoint = new Point((p->y + p1->y) / 2, (p->x + p1->x) / 2, p1->nextPoint);
                 p1 = p1->nextPoint;
             }
-            else if (p->euclideanDistanceTo(*p1) < 3 && Vector::turnAngle(*p1, *p, *p->nextPoint) < 0.2)
+            else if (p->euclideanDistanceTo(*p1) < 3 && std::fabs(Vector::turnAngle(*p1, *p, *p->nextPoint)) < 0.2)
             {
+                std::cout << "p->euclideanDistanceTo(*p1) < 3 && Vector::turnAngle(*p1, *p, *p->nextPoint) < 0.2"
+                          << std::endl;
                 p1->nextPoint = p->nextPoint;
                 p = p1->nextPoint;
             }
             else
             {
+                std::cout << "p = p->nextPoint" << std::endl;
                 p = p->nextPoint;
                 p1 = p1->nextPoint;
             }

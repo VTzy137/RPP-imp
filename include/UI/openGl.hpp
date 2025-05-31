@@ -14,8 +14,4 @@
 
 namespace OpenGLUI
 {
-GLFWwindow* initOpenGL();
-void drawPoint(Point* point);
-void drawLine(Point* point1, Point* point2);
-void drawPath(Path* path);
 } // namespace OpenGLUI

@@ -1,6 +1,7 @@
 #include "utils/input.hpp"
 #include "geometry/map.hpp"
 #include "geometry/path.hpp"
+#include "utils/logger.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -21,46 +22,61 @@ void Input::readMap()
         return;
     }
 
-    const std::string outputFilePath = configPath + "output/out" + std::to_string(numInput) + ".txt";
-    std::cout << mapFilePath << std::endl << outputFilePath << std::endl;
+    const std::string outputFilePath = configPath + "log/log" + std::to_string(numInput) + ".txt";
+
+    Logger::initialize(outputFilePath);
+
+    Logger::logBothLine("Map file: " + mapFilePath);
+    Logger::logBothLine("Log file: " + outputFilePath);
 
     Map::startPoint = Point();
     Map::finishPoint = Point();
 
     mapFile >> Map::mapHeight >> Map::mapWidth;
-    mapFile >> Map::startPoint.x >> Map::startPoint.y >> Map::finishPoint.x >> Map::finishPoint.y;
+    mapFile >> Map::startPoint.y >> Map::startPoint.x >> Map::finishPoint.y >> Map::finishPoint.x;
     mapFile >> Map::numObstacle;
 
-    std::cout << Map::mapHeight << " " << Map::mapWidth << std::endl;
-    std::cout << Map::startPoint.x << " " << Map::startPoint.y << " " << Map::finishPoint.x << " " << Map::finishPoint.y
-              << std::endl;
-    std::cout << Map::numObstacle << std::endl;
 
-    Map::startPoint.x *= SCALE_FACTOR;
     Map::startPoint.y *= SCALE_FACTOR;
-    Map::finishPoint.x *= SCALE_FACTOR;
+    Map::startPoint.x *= SCALE_FACTOR;
     Map::finishPoint.y *= SCALE_FACTOR;
+    Map::finishPoint.x *= SCALE_FACTOR;
     Map::mapHeight *= SCALE_FACTOR;
     Map::mapWidth *= SCALE_FACTOR;
 
+    std::cout << "Map size: " << Map::mapHeight << " " << Map::mapWidth << std::endl;
+    std::cout << "Start point: " << Map::startPoint.y << " " << Map::startPoint.x << std::endl;
+    std::cout << "Finish point: " << Map::finishPoint.y << " " << Map::finishPoint.x << std::endl;
+    std::cout << "Number of obstacles: " << Map::numObstacle << std::endl;
     std::string line;
+
     for (int i = 0; i < Map::numObstacle; ++i)
     {
+        Map::obstacles.push_back(nullptr);
         mapFile.ignore();
         std::getline(mapFile, line);
-        std::cout << line << std::endl;
 
         std::stringstream ss(line);
-        float x, y;
-        while (ss >> x)
+        float y, x;
+        while (ss >> y)
         {
-            ss >> y;
-            std::cout << x << " " << y << std::endl;
-            std::cout << ss.str() << std::endl;
-            x *= SCALE_FACTOR;
+            ss >> x;
             y *= SCALE_FACTOR;
-            Map::obstacles[i] = new Point(x, y, Map::obstacles[i]);
+            x *= SCALE_FACTOR;
+            Map::obstacles[i] = new Point(y, x, Map::obstacles[i]);
         }
+    }
+
+    for (int i = 0; i < Map::numObstacle; ++i)
+    {
+        std::cout << "Obstacle " << i << ": ";
+        Point* current = Map::obstacles[i];
+        while (current != nullptr)
+        {
+            std::cout << current->y << " " << current->x << " ";
+            current = current->nextPoint;
+        }
+        std::cout << std::endl;
     }
 
     const float mapWidth = Map::mapWidth;
@@ -71,7 +87,15 @@ void Input::readMap()
     Map::obstacles[Map::numObstacle] = new Point(mapWidth, 0, Map::obstacles[Map::numObstacle]);
     Map::obstacles[Map::numObstacle] = new Point(mapWidth, mapHeight, Map::obstacles[Map::numObstacle]);
     Map::obstacles[Map::numObstacle] = new Point(0, mapHeight, Map::obstacles[Map::numObstacle]);
-    std::cout << "read map" << std::endl;
+
+    std::cout << "Obstacle " << Map::numObstacle << ": ";
+    Point* current = Map::obstacles[Map::numObstacle];
+    while (current != nullptr)
+    {
+        std::cout << current->y << " " << current->x << " ";
+        current = current->nextPoint;
+    }
+    std::cout << std::endl;
 
     ++Map::numObstacle;
 }

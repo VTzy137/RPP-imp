@@ -4,14 +4,14 @@
 class Point
 {
   public:
-    float x, y;
+    float y, x;
     Point* nextPoint;
 
-    Point() : x(0), y(0), nextPoint(nullptr)
+    Point() : y(0), x(0), nextPoint(nullptr)
     {
     }
-    Point(float xPosition, float yPosition, Point* nextPointPtr = nullptr)
-        : x(xPosition), y(yPosition), nextPoint(nextPointPtr)
+    Point(float yPosition, float xPosition, Point* nextPointPtr = nullptr)
+        : y(yPosition), x(xPosition), nextPoint(nextPointPtr)
     {
     }
 
