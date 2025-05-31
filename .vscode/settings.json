@@ -19,6 +19,7 @@
     "random": "cpp",
     "memory": "cpp",
     "functional": "cpp",
-    "ranges": "cpp"
+    "ranges": "cpp",
+    "future": "cpp"
   }
 }

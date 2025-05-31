@@ -1,7 +1,0 @@
-#include "UI/openGl.hpp"
-#include "app.hpp"
-#include "evolution/pso.hpp"
-#include "geometry/path.hpp"
-#include "geometry/point.hpp"
-#include "geometry/vector.hpp"
-#include "global_type.hpp"

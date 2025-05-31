@@ -20,9 +20,7 @@ bool initRandPath(Point* p, Point* q)
             new Point(std::max(3.0f, yBegin + j * sin + rrr * cos * (1 - powf((j - dis / 2) / dis, 2))),
                       std::max(3.0f, xBegin + j * cos - rrr * sin * (1 - powf((j - dis / 2) / dis, 2))), nullptr);
         p = p->nextPoint;
-        std::cout << p->y << "-" << p->x << "  ";
     }
-    std::cout << std::endl;
     p->nextPoint = q;
     return (rrr < 0);
 }

@@ -17,14 +17,8 @@ jobs:
           sudo apt update
           sudo apt install -y \
             cmake \
-            libgl1-mesa-dev \
-            libglu1-mesa-dev \
-            libglew-dev \
-            libglfw3-dev \
-            libx11-dev \
-            xorg-dev \
-            nlohmann-json3-dev
-
+            nlohmann-json3-dev \
+            libopencv-dev
 
       - name: Create Build Directory
         run: mkdir -p build

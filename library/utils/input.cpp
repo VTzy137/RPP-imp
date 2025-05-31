@@ -11,7 +11,7 @@ void Input::readMap()
 {
     constexpr int SCALE_FACTOR = 2;
     const std::string configPath = std::string(ASSET_PATH) + "/";
-    const int numInput = 1;
+    const int numInput = 2;
 
     const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
     std::ifstream mapFile(mapFilePath);

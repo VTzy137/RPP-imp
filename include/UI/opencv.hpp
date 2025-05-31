@@ -2,6 +2,7 @@
 
 #include "geometry/path.hpp"
 #include "geometry/point.hpp"
+#include <algorithm>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
@@ -11,13 +12,23 @@ class OpenCV
 {
   public:
     static cv::Mat image;
+    static cv::Mat imageMap;
+    inline static float ratio = 1.0f;
+    static void calcResize();
     static void drawPoint(Point* point, cv::Scalar color = cv::Scalar(255, 0, 0));
-    static void drawLine(Point* point1, Point* point2, cv::Scalar color = cv::Scalar(0, 255, 0));
-    static void drawPath(Path* path, cv::Scalar color = cv::Scalar(0, 0, 255));
+    static void drawLine(Point* point1, Point* point2);
+    static void drawPath(Path* path);
     static void showImage();
-    static void showImage(int waitTime); // Show with custom wait time
-    static void clearCanvas();           // Clear the canvas (undo all drawings)
-    static void waitForKey();            // Wait until any key is pressed
-    static void closeWindow();           // Close the display window
+    static void showImage(int waitTime);
+    static void clearCanvas();
+    static void saveMapGradient();
+    static void clearCanvasWithMap();
+    static void waitForKey();
+    static void closeWindow();
     static void example();
+    static cv::Scalar getGradientColor(float value);
+
+  private:
+    inline static std::vector<cv::Scalar> colorLUT;
+    static void initColorLUT();
 };

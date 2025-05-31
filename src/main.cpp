@@ -16,7 +16,7 @@
  * algorithms, and manages visualization.
  *
  * This file demonstrates the main workflow of the RPP-imp project, including reading map data,
- * initializing populations, running optimization algorithms, and visualizing results using OpenGL.
+ * initializing populations, running optimization algorithms, and visualizing results using OpenCV.
  */
 int main(int argc, char* argv[])
 {
@@ -27,16 +27,18 @@ int main(int argc, char* argv[])
     srand(time(0));
     clock_t startt = clock();
 
-    // Run the static demo
-    OpenCV::example();
+    // OpenCV::example();
 
-    // Input::readMap();
+    Input::readMap();
+    OpenCV::calcResize();
 
-    // solution1();
+
+    solution1();
+
 
     std::cout << "Demo complete! Press any key to exit..." << std::endl;
-    OpenCV::waitForKey();  // Wait for user input
-    OpenCV::closeWindow(); // Close the window
+    OpenCV::waitForKey();
+    OpenCV::closeWindow();
 
     clock_t endd = clock();
     std::cout << "Total execution time: " << (endd - startt) << " ms" << std::endl;

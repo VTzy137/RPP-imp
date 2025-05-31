@@ -6,12 +6,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     doxygen \
-    qtbase5-dev \
-    libqt5opengl5-dev \
-    libqglviewer-dev-qt5 \
-    libglfw3-dev \
-    libglew-dev \
-    libgl1-mesa-dev \
+    libopencv-dev \
     nlohmann-json3-dev
 
 WORKDIR /app
@@ -27,6 +22,9 @@ FROM ubuntu:22.04
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
+    libopencv-core4.5d \
+    libopencv-imgproc4.5d \
+    libopencv-highgui4.5d \
  && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user

@@ -134,33 +134,33 @@ void Map::markMapGradient()
 
     markAllPointCanCome();
     std::cout << "markAllPointCanCome" << std::endl;
-    for (int i = 0; i <= Map::mapHeight; i++)
-    {
-        for (int j = 0; j <= Map::mapWidth; j++)
-        {
-            if (abs(i - Map::startPoint.x) <= 3 && abs(j - Map::startPoint.y) <= 3)
-                Logger::logBoth("2");
-            else if (abs(i - Map::finishPoint.x) <= 3 && abs(j - Map::finishPoint.y) <= 3)
-                Logger::logBoth("3");
-            else if (Map::mapGradient[i][j] == 1000000)
-                Logger::logBoth("1");
-            else
-                Logger::logBoth("0");
-        }
-        Logger::logBothLine("");
-    }
+    // for (int i = 0; i <= Map::mapHeight; i++)
+    // {
+    //     for (int j = 0; j <= Map::mapWidth; j++)
+    //     {
+    //         if (abs(i - Map::startPoint.x) <= 3 && abs(j - Map::startPoint.y) <= 3)
+    //             Logger::logBoth("2");
+    //         else if (abs(i - Map::finishPoint.x) <= 3 && abs(j - Map::finishPoint.y) <= 3)
+    //             Logger::logBoth("3");
+    //         else if (Map::mapGradient[i][j] == 1000000)
+    //             Logger::logBoth("1");
+    //         else
+    //             Logger::logBoth("0");
+    //     }
+    //     Logger::logBothLine("");
+    // }
 
     markGradientByDistanceFromOutline();
     std::cout << "markGradientByDistanceFromOutline" << std::endl;
-    for (int i = 0; i <= Map::mapHeight; i++)
-    {
-        for (int j = 0; j <= Map::mapWidth; j++)
-        {
-            if (Map::mapGradient[i][j] > 1000000)
-                Logger::logBoth("1");
-            else
-                Logger::logBoth("0");
-        }
-        Logger::logBothLine("");
-    }
+    // for (int i = 0; i <= Map::mapHeight; i++)
+    // {
+    //     for (int j = 0; j <= Map::mapWidth; j++)
+    //     {
+    //         if (Map::mapGradient[i][j] > 1000000)
+    //             Logger::logBoth("1");
+    //         else
+    //             Logger::logBoth("0");
+    //     }
+    //     Logger::logBothLine("");
+    // }
 }

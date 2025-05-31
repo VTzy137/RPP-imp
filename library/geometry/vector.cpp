@@ -42,7 +42,6 @@ float Vector::turnAngle(const Point& A, const Point& B, const Point& C)
     float BC_x = C.x - B.x;
     float dot = AB_y * BC_y + AB_x * BC_x;
     float cross = AB_x * BC_y - AB_y * BC_x;
-    std::cout << "dot: " << dot << " cross: " << cross << std::endl;
     return atan2(cross, dot);
 }
 

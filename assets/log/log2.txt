@@ -1,0 +1,3 @@
+Logger initialized: /home/vtzy/Documents/RPP-imp/assets/log/log2.txt
+Map file: /home/vtzy/Documents/RPP-imp/assets/input/map2.txt
+Log file: /home/vtzy/Documents/RPP-imp/assets/log/log2.txt
