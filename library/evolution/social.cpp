@@ -1,72 +1,116 @@
 #include "evolution/social.hpp"
+#include "UI/opencv.hpp"
 #include "geometry/path.hpp"
+#include <algorithm>
+#include <iostream>
+
+namespace
+{
+// Helper function to check dominance for all population pairs
+void markDominatedPaths()
+{
+    const int populationSize = Path::population.size();
+    for (int i = 0; i < populationSize; ++i)
+    {
+        Path::population[i]->calculatePathTargetScore();
+        for (int j = 0; j < populationSize; ++j)
+        {
+            if (!Path::population[i]->alive || !Path::population[j]->alive)
+            {
+                continue;
+            }
+
+            const int isDominant = Path::dominantPath(*Path::population[i], *Path::population[j]);
+            if (isDominant)
+            {
+                Path::population[j]->alive = false;
+            }
+        }
+    }
+}
+
+// Helper function to compact population by removing dead paths
+void compactPopulation()
+{
+    const int populationSize = Path::population.size();
+    int aliveCount = 0;
+
+    for (int i = 0; i < populationSize; ++i)
+    {
+        if (!Path::population[i]->alive)
+        {
+            continue;
+        }
+        Path::population[aliveCount] = Path::population[i];
+        ++aliveCount;
+    }
+
+    Path::population.erase(Path::population.begin() + aliveCount, Path::population.end());
+}
+
+// Helper function to find the best path among alive population
+void updateGlobalBestPath()
+{
+    Path::gPath = Path::population[0];
+    const int populationSize = Path::population.size();
+
+    for (int i = 0; i < populationSize; ++i)
+    {
+        if (Path::betterPath(*Path::population[i], *Path::gPath))
+        {
+            Path::gPath = Path::population[i];
+        }
+    }
+}
+
+// Helper function to mark paths based on target comparison
+void markInferiorPathsByTargets()
+{
+    const int populationSize = Path::population.size();
+    for (int i = 0; i < populationSize; ++i)
+    {
+        Path::population[i]->calculatePathTargetScore();
+        for (int j = 0; j < i; ++j)
+        {
+            if (!Path::population[i]->alive || !Path::population[j]->alive)
+            {
+                continue;
+            }
+
+            const int targetComparison = Path::numTargetBetterPath(*Path::population[i], *Path::population[j]);
+            if (targetComparison >= 2)
+            {
+                Path::population[j]->alive = false;
+            }
+        }
+    }
+}
+} // namespace
 
 void Social::lastSocial()
 {
-    int numPopulations = Path::population.size();
-    for (int i = 0; i < numPopulations; ++i)
-    {
-        for (int j = 0; j < numPopulations; ++j)
-        {
-            if (Path::population[i].alive == false || Path::population[j].alive == false)
-                continue;
-            int tmp = Path::dominantPath(Path::population[i], Path::population[j]);
-            if (tmp == 1)
-                Path::population[i].alive = false;
-            else if (tmp == -1)
-                Path::population[j].alive = false;
-        }
-    }
-    int numPopu = 0;
-    for (int i = 0; i < numPopulations; i++)
-    {
-        if (Path::population[i].alive == false)
-            continue;
-        Path::pPath[numPopu] = Path(Path::population[i]);
-        Path::population[numPopu] = Path(Path::population[i]);
-        if (Path::betterPath(Path::pPath[numPopu], *Path::gPath))
-            Path::gPath = &Path::pPath[numPopu];
-        numPopu++;
-    }
-    Path::population.erase(Path::population.begin() + numPopu, Path::population.end());
+    std::cout << "lastSocial" << std::endl;
+
+    markDominatedPaths();
+    updateGlobalBestPath();
+    compactPopulation();
 }
 
 void Social::decreaseDimension()
 {
-    for (int i = 0; i < Path::population.size(); ++i)
+    const int populationSize = Path::population.size();
+    for (int i = 0; i < populationSize; ++i)
     {
-        Path::population[i].simplifyPath();
+        Path::population[i]->simplifyPath();
     }
 }
 
 void Social::saveExe()
 {
     decreaseDimension();
-    Path::gPath = &Path::population[0];
-    for (int i = 0; i < Path::population.size(); ++i)
-    {
-        Path::population[i].calculatePathTargetScore();
-        for (int j = 0; j < i; ++j)
-        {
-            if (Path::population[i].alive == false || Path::population[j].alive == false)
-                continue;
-            int tmp = Path::numTargetBetterPath(Path::population[i], Path::population[j]);
-            if (tmp == 1)
-                Path::population[j].alive = false;
-            else if (tmp == -1)
-                Path::population[i].alive = false;
-        }
-    }
-    int numPopu = 0;
-    for (int i = 0; i < Path::population.size(); i++)
-    {
-        if (Path::population[i].alive == false)
-            continue;
-        Path::pPath[numPopu] = Path(Path::population[i]);
-        Path::population[numPopu] = Path(Path::population[i]);
-        if (Path::betterPath(Path::pPath[numPopu], *Path::gPath))
-            Path::gPath = &Path::pPath[numPopu];
-        numPopu++;
-    }
-    Path::population.erase(Path::population.begin() + numPopu, Path::population.end());
+    markInferiorPathsByTargets();
+    compactPopulation();
+
+    OpenCV::clearCanvasWithMap();
+    OpenCV::waitForKey();
 }

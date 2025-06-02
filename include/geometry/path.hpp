@@ -14,7 +14,7 @@ class Path
   public:
     inline static int populationMax = 100;
     inline static Path *currPath, *gPath;
-    inline static std::vector<Path> pPath, population;
+    inline static std::vector<Path*> population;
     inline static constexpr float MAX_VALUE = 1e7f;
 
     bool alive = true;
@@ -57,6 +57,18 @@ class Path
     {
     }
 
+    ~Path()
+    {
+        Point* current = begin;
+        while (current != nullptr)
+        {
+            Point* next = current->nextPoint;
+            delete current;
+            current = next;
+        }
+        begin = nullptr;
+    }
+
 
     int numPoints() const;
 
@@ -77,4 +89,6 @@ class Path
     static bool dominantPath(const Path& reference, const Path& other);
 
     void calculatePathTargetScore();
+
+    void changePathTo(const Path& other);
 };

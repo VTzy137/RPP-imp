@@ -26,4 +26,5 @@ class Map
     inline static int mapGradient[1000][1000] = {};
 
     static void markMapGradient();
+    static void smoothMapGradient();
 };

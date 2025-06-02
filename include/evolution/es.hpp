@@ -5,5 +5,5 @@
 
 struct ES
 {
-    static void ES1(double toiu);
+    static void ES1(float toiu);
 };

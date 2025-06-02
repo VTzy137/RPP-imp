@@ -3,7 +3,6 @@
 #include <cmath>
 #include <iostream>
 #include <queue>
-#include <utils/logger.hpp>
 
 void Map::markObstaclePoint(int y, int x)
 {
@@ -139,15 +138,15 @@ void Map::markMapGradient()
     //     for (int j = 0; j <= Map::mapWidth; j++)
     //     {
     //         if (abs(i - Map::startPoint.x) <= 3 && abs(j - Map::startPoint.y) <= 3)
-    //             Logger::logBoth("2");
+    //             Input::logBoth("2");
     //         else if (abs(i - Map::finishPoint.x) <= 3 && abs(j - Map::finishPoint.y) <= 3)
-    //             Logger::logBoth("3");
+    //             Input::logBoth("3");
     //         else if (Map::mapGradient[i][j] == 1000000)
-    //             Logger::logBoth("1");
+    //             Input::logBoth("1");
     //         else
-    //             Logger::logBoth("0");
+    //             Input::logBoth("0");
     //     }
-    //     Logger::logBothLine("");
+    //     Input::logBothLine("");
     // }
 
     markGradientByDistanceFromOutline();
@@ -157,10 +156,34 @@ void Map::markMapGradient()
     //     for (int j = 0; j <= Map::mapWidth; j++)
     //     {
     //         if (Map::mapGradient[i][j] > 1000000)
-    //             Logger::logBoth("1");
+    //             Input::logBoth("1");
     //         else
-    //             Logger::logBoth("0");
+    //             Input::logBoth("0");
     //     }
-    //     Logger::logBothLine("");
+    //     Input::logBothLine("");
     // }
+}
+
+void Map::smoothMapGradient()
+{
+    std::vector<int> lastRow(Map::mapWidth + 1, 0);
+    for (int i = 0; i < Map::mapHeight; i++)
+    {
+        for (int j = 0; j < Map::mapWidth; j++)
+        {
+            int sum = 0;
+            for (auto& neighbor : GlobalType::neighbors)
+            {
+                int ny = i + neighbor.dy;
+                int nx = j + neighbor.dx;
+                sum += Map::mapGradient[ny][nx];
+            }
+            lastRow[j] = Map::mapGradient[i][j];
+            Map::mapGradient[i][j] = (Map::mapGradient[i][j] * 2 + sum) / 10;
+        }
+    }
+    for (int j = 0; j < Map::mapWidth; j++)
+    {
+        Map::mapGradient[Map::mapHeight][j] = lastRow[j];
+    }
 }

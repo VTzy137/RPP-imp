@@ -3,6 +3,7 @@
 #include "geometry/point.hpp"
 #include "global_type.hpp"
 #include <cmath>
+#include <iostream>
 
 
 int Path::numPoints() const
@@ -53,7 +54,7 @@ bool Path::isBetterThan(const Path& other) const
     float diffAngle = this->angle - other.angle;
     float diffDistance = this->distance - other.distance;
     float diffRisk = this->risk - other.risk;
-    return weightBetterAngle * diffAngle + weightBetterDistance * diffDistance + weightBetterRisk * diffRisk > 0.0f;
+    return weightBetterAngle * diffAngle + weightBetterDistance * diffDistance + weightBetterRisk * diffRisk < 0.0f;
 }
 
 
@@ -70,8 +71,8 @@ int Path::numTargetBetterThan(const Path& other) const
         numBetter++;
     if (this->distance < other.distance)
         numBetter++;
-    if (this->risk < other.risk)
-        numBetter++;
+    // if (this->risk > other.risk)
+    //     numBetter++;
     return numBetter;
 }
 
@@ -131,12 +132,44 @@ void Path::calculatePathTargetScore()
     {
         nextPoint = point->nextPoint;
         distance += point->euclideanDistanceTo(*nextPoint);
-        float turnAngle = Vector::turnAngle(*point, *nextPoint, *nextPoint->nextPoint);
-        angle += turnAngle * turnAngle;
+        if (nextPoint->nextPoint != nullptr)
+        {
+            float turnAngle = Vector::turnAngle(*point, *nextPoint, *nextPoint->nextPoint);
+            angle += turnAngle * turnAngle;
+        }
         risk += std::max(0, nextPoint->gradientRisk() - 500000);
         point = nextPoint;
     }
     this->risk = risk / this->numPoints();
     this->distance = distance;
     this->angle = std::max(1.0f, angle);
+}
+
+void Path::changePathTo(const Path& other)
+{
+    this->distance = other.distance;
+    this->angle = other.angle;
+    this->risk = other.risk;
+    Point* point = this->begin;
+    Point* nextPoint = point->nextPoint;
+    point->nextPoint = nullptr;
+    while (nextPoint != nullptr)
+    {
+        Point* tmp = nextPoint;
+        nextPoint = point->nextPoint;
+        delete tmp;
+    }
+
+    Point* otherPoint = other.begin;
+    while (otherPoint != nullptr)
+    {
+        point->y = otherPoint->y;
+        point->x = otherPoint->x;
+        if (otherPoint->nextPoint != nullptr)
+        {
+            point->nextPoint = new Point();
+        }
+        otherPoint = otherPoint->nextPoint;
+        point = point->nextPoint;
+    }
 }

@@ -16,7 +16,7 @@ class OpenCV
     inline static float ratio = 1.0f;
     static void calcResize();
     static void drawPoint(Point* point, cv::Scalar color = cv::Scalar(255, 0, 0));
-    static void drawLine(Point* point1, Point* point2);
+    static void drawLine(Point* point1, Point* point2, int thickness = 1, cv::Scalar color = cv::Scalar(0, 0, 0));
     static void drawPath(Path* path);
     static void showImage();
     static void showImage(int waitTime);
@@ -27,6 +27,7 @@ class OpenCV
     static void closeWindow();
     static void example();
     static cv::Scalar getGradientColor(float value);
+    static void drawObstacles();
 
   private:
     inline static std::vector<cv::Scalar> colorLUT;

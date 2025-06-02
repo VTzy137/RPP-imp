@@ -1,17 +1,14 @@
 #include "utils/input.hpp"
 #include "geometry/map.hpp"
 #include "geometry/path.hpp"
-#include "utils/logger.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-void Input::readMap()
+void Input::readMap(int numInput)
 {
-    constexpr int SCALE_FACTOR = 2;
     const std::string configPath = std::string(ASSET_PATH) + "/";
-    const int numInput = 2;
 
     const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
     std::ifstream mapFile(mapFilePath);
@@ -22,12 +19,6 @@ void Input::readMap()
         return;
     }
 
-    const std::string outputFilePath = configPath + "log/log" + std::to_string(numInput) + ".txt";
-
-    Logger::initialize(outputFilePath);
-
-    Logger::logBothLine("Map file: " + mapFilePath);
-    Logger::logBothLine("Log file: " + outputFilePath);
 
     Map::startPoint = Point();
     Map::finishPoint = Point();
@@ -36,6 +27,9 @@ void Input::readMap()
     mapFile >> Map::startPoint.y >> Map::startPoint.x >> Map::finishPoint.y >> Map::finishPoint.x;
     mapFile >> Map::numObstacle;
 
+
+    // int SCALE_FACTOR = 500 / std::max(Map::mapHeight, Map::mapWidth);
+    int SCALE_FACTOR = 2;
 
     Map::startPoint.y *= SCALE_FACTOR;
     Map::startPoint.x *= SCALE_FACTOR;
@@ -98,4 +92,67 @@ void Input::readMap()
     std::cout << std::endl;
 
     ++Map::numObstacle;
+}
+
+std::ofstream Input::logFile;
+bool Input::isInitialized = false;
+
+void Input::initialize(int numLogger)
+{
+
+    const std::string configPath = std::string(ASSET_PATH) + "/";
+    const std::string logFilePath = configPath + "log/log" + std::to_string(numLogger) + ".txt";
+
+    Input::logBothLine("Log file: " + logFilePath);
+    if (isInitialized)
+    {
+        logFile.close();
+    }
+
+    logFile.open(logFilePath);
+    isInitialized = true;
+
+    if (logFile.is_open())
+    {
+        logBothLine("Input initialized: " + logFilePath);
+    }
+    else
+    {
+        std::cerr << "Failed to open log file: " << logFilePath << std::endl;
+    }
+}
+
+void Input::log(const std::string& message)
+{
+    if (isInitialized && logFile.is_open())
+    {
+        logFile << message;
+        logFile.flush();
+    }
+}
+
+void Input::logLine(const std::string& message)
+{
+    log(message + "\n");
+}
+
+void Input::logBoth(const std::string& message)
+{
+    // std::cout << message;
+    log(message);
+}
+
+void Input::logBothLine(const std::string& message)
+{
+    logBoth(message + "\n");
+}
+
+void Input::close()
+{
+    if (isInitialized && logFile.is_open())
+    {
+        logBothLine("Input closing...");
+        logFile.close();
+        isInitialized = false;
+    }
 }

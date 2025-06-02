@@ -29,12 +29,12 @@ int main(int argc, char* argv[])
 
     // OpenCV::example();
 
-    Input::readMap();
+    // Input::initialize(2);
+    Input::readMap(2);
     OpenCV::calcResize();
 
 
     solution1();
-
 
     std::cout << "Demo complete! Press any key to exit..." << std::endl;
     OpenCV::waitForKey();

@@ -9,21 +9,27 @@
 #include <thread>
 // #include "evolution/operator/combination.hpp"
 
-void PSOES(double toiu, int loop)
+inline float toiu = 60.0f;
+inline int loop = 10000;
+void PSOES()
 {
-    int showloop = 20;
+    int showloop = 5;
     for (int i = 0; i < loop; ++i)
     {
-        OpenCV::clearCanvasWithMap();
-        for (int j = 0; j < Path::population.size(); ++j)
+        if (i % showloop == 0)
         {
-            OpenCV::drawPath(&Path::population[j]);
+            OpenCV::clearCanvasWithMap();
+            for (int j = 0; j < Path::population.size(); ++j)
+            {
+                OpenCV::drawPath(Path::population[j]);
+            }
+            OpenCV::showImage(30);
+            showloop += 2;
         }
-        OpenCV::showImage(30);
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
         Mutation::est += 0.7 / loop;
-        toiu += 30.0 / loop;
+        toiu += 30.0f / loop;
         // if(i < loop/10) ES(toiu/10);
         if (i < loop / 4)
             PSO::PSOmigrate();
@@ -34,9 +40,10 @@ void PSOES(double toiu, int loop)
         }
         else
         {
+            std::cout << "ES::ES1(toiu)" << std::endl;
             ES::ES1(toiu);
-            PSO::moveMent();
-            PSO::updateBestPath();
+            // PSO::moveMent();
+            // PSO::updateBestPath();
         }
     }
 }

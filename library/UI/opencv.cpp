@@ -1,8 +1,8 @@
 #include "UI/opencv.hpp"
 #include "geometry/map.hpp"
 
-cv::Mat OpenCV::image = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(0, 0, 0));
-cv::Mat OpenCV::imageMap = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(0, 0, 0));
+cv::Mat OpenCV::image = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255, 255, 255));
+cv::Mat OpenCV::imageMap = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255, 255, 255));
 
 void OpenCV::initColorLUT()
 {
@@ -32,10 +32,10 @@ void OpenCV::drawPoint(Point* point, cv::Scalar color)
     }
 }
 
-void OpenCV::drawLine(Point* point1, Point* point2)
+void OpenCV::drawLine(Point* point1, Point* point2, int thickness, cv::Scalar color)
 {
     cv::line(image, cv::Point(point1->x * ratio, point1->y * ratio), cv::Point(point2->x * ratio, point2->y * ratio),
-             cv::Scalar(0, 0, 0), 1);
+             color, thickness);
 }
 
 void OpenCV::drawPath(Path* path)
@@ -43,6 +43,7 @@ void OpenCV::drawPath(Path* path)
     Point* current = path->begin;
     while (current != nullptr && current->nextPoint != nullptr)
     {
+        drawPoint(current, cv::Scalar(200, 200, 200));
         drawLine(current, current->nextPoint);
         current = current->nextPoint;
     }
@@ -61,7 +62,7 @@ void OpenCV::showImage(int waitTime)
 
 void OpenCV::clearCanvas()
 {
-    image = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(0, 0, 0));
+    image = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255, 255, 255));
 }
 
 void OpenCV::waitForKey()
@@ -144,10 +145,31 @@ void OpenCV::saveMapGradient()
                 int x = static_cast<int>(j * ratio);
                 int y = static_cast<int>(i * ratio);
 
+                // cv::rectangle(imageMap, cv::Point(x, y),
+                //               cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color, -1);
                 cv::rectangle(imageMap, cv::Point(x, y),
-                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color, -1);
+                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), cv::Scalar(255, 255, 255), -1);
             }
         }
+    }
+
+    cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 3, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 3, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 2, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 2, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 1, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 1, cv::Scalar(0, 0, 255), -1);
+    for (auto& obstacle : Map::obstacles)
+    {
+        Point* current = obstacle;
+        while (current != nullptr && current->nextPoint != nullptr)
+        {
+            cv::line(imageMap, cv::Point(current->x * ratio, current->y * ratio),
+                     cv::Point(current->nextPoint->x * ratio, current->nextPoint->y * ratio), cv::Scalar(0, 0, 0), 3);
+            current = current->nextPoint;
+        }
+        cv::line(imageMap, cv::Point(current->x * ratio, current->y * ratio),
+                 cv::Point(obstacle->x * ratio, obstacle->y * ratio), cv::Scalar(0, 0, 0), 3);
     }
 }
 
@@ -158,7 +180,7 @@ void OpenCV::clearCanvasWithMap()
 
 cv::Scalar OpenCV::getGradientColor(float value)
 {
-    float minVal = 500000, maxVal = 1300000;
+    float minVal = 800000, maxVal = 1300000;
     float normalized = 255.0f * (value - minVal) / (maxVal - minVal);
     int index = static_cast<int>(std::clamp(normalized, 0.0f, 255.0f));
     return OpenCV::colorLUT[index];

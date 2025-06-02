@@ -7,17 +7,16 @@
 // Define static members
 Path* PSO::currPath = nullptr;
 Path* PSO::gPath = nullptr;
-std::vector<Path> PSO::pPath;
-std::vector<Path> PSO::population;
+std::vector<Path*> PSO::pPath;
 
 void PSO::updateVelocity(int i)
 {
     int j = 1;
-    Point *p = population[i].begin->nextPoint, *pp = pPath[i].begin->nextPoint;
-    while (p->nextPoint != nullptr)
+    Point *p = Path::population[i]->begin->nextPoint, *pp = PSO::pPath[i]->begin->nextPoint;
+    while (p != nullptr && pp != nullptr)
     {
-        velocity[i][j][0] = PSO::w0PSO * velocity[i][j][0] + PSO::w1PSO * (pp->x - p->x);
-        velocity[i][j][1] = PSO::w0PSO * velocity[i][j][1] + PSO::w1PSO * (pp->y - p->y);
+        PSO::velocity[i][j][0] = PSO::w0PSO * PSO::velocity[i][j][0] + PSO::w1PSO * (pp->x - p->x);
+        PSO::velocity[i][j][1] = PSO::w0PSO * PSO::velocity[i][j][1] + PSO::w1PSO * (pp->y - p->y);
         ++j;
         p = p->nextPoint;
         pp = pp->nextPoint;
@@ -29,8 +28,9 @@ void PSO::moveMent()
     for (int i = 0; i < Path::population.size(); i++)
     {
         updateVelocity(i);
-        Point* p = population[i].begin->nextPoint;
-        int pathLen = population[i].numPoints();
+        std::cout << "updateVelocity" << std::endl;
+        Point* p = Path::population[i]->begin->nextPoint;
+        int pathLen = Path::population[i]->numPoints();
         for (int j = 1; j < pathLen - 1; ++j)
         {
             p->x += velocity[i][j][0] * PSO::wVPSO;
@@ -44,11 +44,11 @@ void PSO::updateBestPath()
 {
     for (int i = 0; i < Path::population.size(); i++)
     {
-        if (Path::betterPath(Path::population[i], PSO::pPath[i]))
-            PSO::pPath[i] = Path(Path::population[i]);
-        if (Path::betterPath(Path::population[i], *PSO::gPath))
+        // if (Path::betterPath(Path::population[i], PSO::pPath[i]))
+        //     PSO::pPath[i].changePathTo(Path::population[i]);
+        if (Path::betterPath(*Path::population[i], *PSO::gPath))
         {
-            PSO::gPath = &Path::population[i];
+            PSO::gPath->changePathTo(*Path::population[i]);
         }
     }
 }
@@ -56,10 +56,13 @@ void PSO::updateBestPath()
 
 void PSO::PSOmigrate()
 {
+    std::cout << "PSOmigrate" << std::endl;
     for (int i = 0; i < Path::population.size(); i++)
     {
-        Point *p1 = Path::population[i].begin, *p = p1->nextPoint;
+        std::cout << "p->y: " << Path::population[i]->begin << std::endl;
+        Point *p1 = Path::population[i]->begin, *p = p1->nextPoint;
         std::pair<float, float> q;
+        std::cout << "p->y: " << p->y << " p->x: " << p->x << std::endl;
         while (p != nullptr && p->nextPoint != nullptr)
         {
             int y = static_cast<int>(p->y), x = static_cast<int>(p->x);
@@ -97,4 +100,5 @@ void PSO::PSOmigrate()
             }
         }
     }
+    std::cout << "PSOmigrate done" << std::endl;
 }
