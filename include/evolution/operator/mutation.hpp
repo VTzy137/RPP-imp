@@ -3,8 +3,5 @@
 
 class Mutation
 {
-    public:
-        static Path* mutation(Path* p, float toiu);
-        static float est;
+  public:
 };
- 

@@ -25,12 +25,13 @@ void solution1()
 
     Map::markMapGradient();
 
-    Map::smoothMapGradient();
-
     std::cout << "marked map gradient" << std::endl;
 
     OpenCV::saveMapGradient();
     std::cout << "saved map gradient" << std::endl;
+    OpenCV::clearCanvasWithMap();
+    OpenCV::showImage();
+    OpenCV::waitForKey();
     OpenCV::clearCanvasWithMap();
 
     std::cout << "start init population" << std::endl;
@@ -49,8 +50,12 @@ void solution1()
             tmp2 = tmp2->nextPoint;
         }
         std::cout << "population[i]->numPoints(): " << Path::population[i]->numPoints() << std::endl;
+        OpenCV::drawPath(Path::population[i], cv::Scalar(200, 200, 0));
     }
 
+    OpenCV::showImage();
+    OpenCV::waitForKey();
+    OpenCV::clearCanvasWithMap();
 
     std::cout << "finish init population" << std::endl;
 
@@ -61,13 +66,6 @@ void solution1()
     std::cout << "start PSOES" << std::endl;
 
     OpenCV::clearCanvasWithMap();
-    // for (int j = 0; j < Path::population.size(); ++j)
-    // {
-    //     OpenCV::drawPath(&Path::population[j]);
-    // }
-    // std::cout << "showImage" << std::endl;
-    // OpenCV::showImage();
-    // OpenCV::waitForKey();
 
     PSOES();
     std::cout << "finish PSOES" << std::endl;
@@ -75,13 +73,6 @@ void solution1()
     Social::lastSocial();
 
     OpenCV::clearCanvasWithMap();
-    // for (int j = 0; j < Path::population.size(); ++j)
-    // {
-    //     std::cout << "drawPath" << std::endl;
-    //     OpenCV::drawPath(&Path::population[j]);
-    // }
-    // std::cout << "showImage" << std::endl;
-    // OpenCV::showImage();
     for (int i = 0; i < Path::population.size(); i++)
     {
         if (i != 0)

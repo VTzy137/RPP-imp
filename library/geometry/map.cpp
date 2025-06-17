@@ -127,6 +127,30 @@ void Map::markGradientByDistanceFromOutline()
     }
 }
 
+void Map::smoothMapGradient()
+{
+    std::vector<int> lastRow(Map::mapWidth + 1, 0);
+    for (int i = 0; i < Map::mapHeight; i++)
+    {
+        for (int j = 0; j < Map::mapWidth; j++)
+        {
+            int sum = 0;
+            for (auto& neighbor : GlobalType::neighbors)
+            {
+                int ny = i + neighbor.dy;
+                int nx = j + neighbor.dx;
+                sum += Map::mapGradient[ny][nx];
+            }
+            lastRow[j] = Map::mapGradient[i][j];
+            Map::mapGradient[i][j] = (Map::mapGradient[i][j] * 2 + sum) / 10;
+        }
+    }
+    for (int j = 0; j < Map::mapWidth; j++)
+    {
+        Map::mapGradient[Map::mapHeight][j] = lastRow[j];
+    }
+}
+
 void Map::markMapGradient()
 {
     markAllObstaclesOutline();
@@ -162,28 +186,7 @@ void Map::markMapGradient()
     //     }
     //     Input::logBothLine("");
     // }
+
+    smoothMapGradient();
 }
 
-void Map::smoothMapGradient()
-{
-    std::vector<int> lastRow(Map::mapWidth + 1, 0);
-    for (int i = 0; i < Map::mapHeight; i++)
-    {
-        for (int j = 0; j < Map::mapWidth; j++)
-        {
-            int sum = 0;
-            for (auto& neighbor : GlobalType::neighbors)
-            {
-                int ny = i + neighbor.dy;
-                int nx = j + neighbor.dx;
-                sum += Map::mapGradient[ny][nx];
-            }
-            lastRow[j] = Map::mapGradient[i][j];
-            Map::mapGradient[i][j] = (Map::mapGradient[i][j] * 2 + sum) / 10;
-        }
-    }
-    for (int j = 0; j < Map::mapWidth; j++)
-    {
-        Map::mapGradient[Map::mapHeight][j] = lastRow[j];
-    }
-}

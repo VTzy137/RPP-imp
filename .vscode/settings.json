@@ -20,6 +20,7 @@
     "memory": "cpp",
     "functional": "cpp",
     "ranges": "cpp",
-    "future": "cpp"
+    "future": "cpp",
+    "ostream": "cpp"
   }
 }

@@ -15,5 +15,8 @@ class PSO
     static inline float wVPSO = 0.1f;
     static void moveMent();
     static void updateBestPath();
+
+    static void moveFollowGradient(Point* begin, Point* middle, Point* end);
+    static void planePath(Point* begin, Point* middle, int position);
     static void PSOmigrate();
 };
