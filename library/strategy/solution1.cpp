@@ -84,9 +84,9 @@ void solution1()
             tmp = tmp->nextPoint;
         }
     }
-    OpenCV::drawPath(Path::gPath);
-    OpenCV::showImage();
-    OpenCV::waitForKey();
+    // OpenCV::drawPath(Path::gPath);
+    // OpenCV::showImage();
+    // OpenCV::waitForKey();
 
     Path::gPath->calculatePathTargetScore();
     std::cout << -2 << std::endl;

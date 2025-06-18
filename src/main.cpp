@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     // OpenCV::example();
 
     // Input::initialize(2);
-    Input::readMap(2);
+    Input::readMap(6);
     OpenCV::calcResize();
 
 
