@@ -1,7 +1,7 @@
 ---
-description: When you want to know entire project
+description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Cursor AI Rules for my-react-app
 
@@ -29,3 +29,5 @@ alwaysApply: false
 - If unsure about component relationships, ask the user to clarify or refer to the diagram.
 
 # End of rules
+
+
