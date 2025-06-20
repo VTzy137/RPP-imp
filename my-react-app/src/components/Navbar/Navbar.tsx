@@ -13,6 +13,9 @@ const Navbar: React.FC = () => {
           <li className="h-[60px] flex items-center mx-4">
             <Link to="/chart" className="text-white flex items-center no-underline px-4 h-full cursor-pointer transition-all duration-200 ease-in-out hover:text-[#61dafb]">Chart</Link>
           </li>
+          <li className="h-[60px] flex items-center mx-4">
+            <Link to="/path" className="text-white flex items-center no-underline px-4 h-full cursor-pointer transition-all duration-200 ease-in-out hover:text-[#61dafb]">Path</Link>
+          </li>
         </ul>
       </div>
     </nav>
