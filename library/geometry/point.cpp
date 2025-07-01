@@ -65,6 +65,15 @@ bool Point::stillOnMap(float y, float x)
     return true;
 }
 
+bool Point::reachBoundary(int y, int x)
+{
+    if (y == 0 || y == Map::mapHeight - 1)
+        return true;
+    if (x == 0 || x == Map::mapWidth - 1)
+        return true;
+    return false;
+}
+
 bool Point::stillOnMap()
 {
     return stillOnMap(this->y, this->x);

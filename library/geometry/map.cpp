@@ -11,6 +11,8 @@ void Map::markObstaclePoint(int y, int x)
     {
         int ny = y + neighbor.dy;
         int nx = x + neighbor.dx;
+        if (!Point::stillOnMap(ny, nx))
+            continue;
         mapGradient[ny][nx] = 1000000;
     }
 }
@@ -130,63 +132,32 @@ void Map::markGradientByDistanceFromOutline()
 void Map::smoothMapGradient()
 {
     std::vector<int> lastRow(Map::mapWidth + 1, 0);
-    for (int i = 0; i < Map::mapHeight; i++)
+    for (int yAxis = 0; yAxis < Map::mapHeight; yAxis++)
     {
-        for (int j = 0; j < Map::mapWidth; j++)
+        for (int xAxis = 0; xAxis < Map::mapWidth; xAxis++)
         {
-            int sum = 0;
+            int sumHeight = 0;
             for (auto& neighbor : GlobalType::neighbors)
             {
-                int ny = i + neighbor.dy;
-                int nx = j + neighbor.dx;
-                sum += Map::mapGradient[ny][nx];
+                int ny = yAxis + neighbor.dy;
+                int nx = xAxis + neighbor.dx;
+                sumHeight += Map::mapGradient[ny][nx];
             }
-            lastRow[j] = Map::mapGradient[i][j];
-            Map::mapGradient[i][j] = (Map::mapGradient[i][j] * 2 + sum) / 10;
+            Map::mapGradient[yAxis][xAxis] = (Map::mapGradient[yAxis][xAxis] * 2 + sumHeight) / 10;
         }
-    }
-    for (int j = 0; j < Map::mapWidth; j++)
-    {
-        Map::mapGradient[Map::mapHeight][j] = lastRow[j];
     }
 }
 
 void Map::markMapGradient()
 {
     markAllObstaclesOutline();
+    std::cout << "markAllObstaclesOutline done" << std::endl;
 
     markAllPointCanCome();
-    std::cout << "markAllPointCanCome" << std::endl;
-    // for (int i = 0; i <= Map::mapHeight; i++)
-    // {
-    //     for (int j = 0; j <= Map::mapWidth; j++)
-    //     {
-    //         if (abs(i - Map::startPoint.x) <= 3 && abs(j - Map::startPoint.y) <= 3)
-    //             Input::logBoth("2");
-    //         else if (abs(i - Map::finishPoint.x) <= 3 && abs(j - Map::finishPoint.y) <= 3)
-    //             Input::logBoth("3");
-    //         else if (Map::mapGradient[i][j] == 1000000)
-    //             Input::logBoth("1");
-    //         else
-    //             Input::logBoth("0");
-    //     }
-    //     Input::logBothLine("");
-    // }
+    std::cout << "markAllPointCanCome done" << std::endl;
 
     markGradientByDistanceFromOutline();
-    std::cout << "markGradientByDistanceFromOutline" << std::endl;
-    // for (int i = 0; i <= Map::mapHeight; i++)
-    // {
-    //     for (int j = 0; j <= Map::mapWidth; j++)
-    //     {
-    //         if (Map::mapGradient[i][j] > 1000000)
-    //             Input::logBoth("1");
-    //         else
-    //             Input::logBoth("0");
-    //     }
-    //     Input::logBothLine("");
-    // }
+    std::cout << "markGradientByDistanceFromOutline done" << std::endl;
 
     smoothMapGradient();
 }
-

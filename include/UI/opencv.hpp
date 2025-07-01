@@ -18,16 +18,18 @@ class OpenCV
     static cv::Mat image;
     static cv::Mat imageMap;
     inline static float ratio = 1.0f;
-    static void calcResize();
     static void drawPoint(Point* point, cv::Scalar color = cv::Scalar(255, 0, 0));
     static void drawLine(Point* point1, Point* point2, int thickness = 1, cv::Scalar color = cv::Scalar(0, 0, 0));
     static void drawPath(Path* path, cv::Scalar color = cv::Scalar(200, 200, 200));
-    static void showImage();
-    static void showImage(int waitTime);
+    static void showPopulation(int time = 0);
+    
+    static void waitForKey();
     static void clearCanvas();
+    static void closeWindow();
+    static void showImage(int waitTime = 0);
+   
+    static void calcResize();
     static void saveMapGradient();
     static void clearCanvasWithMap();
-    static void waitForKey();
-    static void closeWindow();
     static cv::Scalar getGradientColor(float value);
 };

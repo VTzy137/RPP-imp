@@ -1,28 +1,9 @@
 #include "UI/opencv.hpp"
 #include "geometry/map.hpp"
+#include <thread>
 
 cv::Mat OpenCV::image = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255, 255, 255));
 cv::Mat OpenCV::imageMap = cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255, 255, 255));
-
-void OpenCV::initColorLUT()
-{
-    colorLUT.resize(256);
-    cv::Mat gray(1, 1, CV_8UC1), color;
-    colorLUT[0] = cv::Scalar(256, 256, 256);
-    for (int i = 1; i < 256; ++i)
-    {
-        gray.at<uchar>(0, 0) = i;
-        cv::applyColorMap(gray, color, cv::COLORMAP_JET);
-        cv::Vec3b bgr = color.at<cv::Vec3b>(0, 0);
-        colorLUT[i] = cv::Scalar(bgr[0], bgr[1], bgr[2]);
-    }
-}
-
-void OpenCV::calcResize()
-{
-    ratio = std::min(1000.0f / Map::mapHeight, 1000.0f / Map::mapWidth);
-    initColorLUT();
-}
 
 void OpenCV::drawPoint(Point* point, cv::Scalar color)
 {
@@ -49,15 +30,29 @@ void OpenCV::drawPath(Path* path, cv::Scalar color)
     }
 }
 
-void OpenCV::showImage()
+void OpenCV::showPopulation(int time)
 {
-    cv::imshow("Image", image);
+    for (int individualIndex = 0; individualIndex < Path::population.size(); ++individualIndex)
+    {
+        OpenCV::drawPath(Path::population[individualIndex]);
+    }
+    OpenCV::showImage(time);
 }
 
 void OpenCV::showImage(int waitTime)
 {
-    cv::imshow("Image", image);
-    cv::waitKey(waitTime);
+    if (waitTime == 0)
+    {
+        cv::imshow("Image", image);
+        OpenCV::waitForKey();
+    }
+    else
+    {
+        cv::imshow("Image", image);
+        cv::waitKey(waitTime);
+        std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+    }
+    OpenCV::clearCanvasWithMap();
 }
 
 void OpenCV::clearCanvas()
@@ -75,6 +70,25 @@ void OpenCV::closeWindow()
     cv::destroyAllWindows();
 }
 
+void OpenCV::initColorLUT()
+{
+    colorLUT.resize(256);
+    cv::Mat gray(1, 1, CV_8UC1), color;
+    colorLUT[0] = cv::Scalar(256, 256, 256);
+    for (int i = 1; i < 256; ++i)
+    {
+        gray.at<uchar>(0, 0) = i;
+        cv::applyColorMap(gray, color, cv::COLORMAP_JET);
+        cv::Vec3b bgr = color.at<cv::Vec3b>(0, 0);
+        colorLUT[i] = cv::Scalar(bgr[0], bgr[1], bgr[2]);
+    }
+}
+
+void OpenCV::calcResize()
+{
+    ratio = std::min(1000.0f / Map::mapHeight, 1000.0f / Map::mapWidth);
+    OpenCV::initColorLUT();
+}
 
 void OpenCV::saveMapGradient()
 {
@@ -92,19 +106,24 @@ void OpenCV::saveMapGradient()
                 int y = static_cast<int>(i * ratio);
 
                 // cv::rectangle(imageMap, cv::Point(x, y),
-                //               cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color, -1);
+                //               cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color,
+                //               -1);
                 cv::rectangle(imageMap, cv::Point(x, y),
-                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), cv::Scalar(255, 255, 255), -1);
+                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1),
+                              cv::Scalar(255, 255, 255), -1);
             }
         }
     }
 
     cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 3, cv::Scalar(0, 0, 255), -1);
-    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 3, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 3, cv::Scalar(0, 0, 255),
+               -1);
     cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 2, cv::Scalar(0, 0, 255), -1);
-    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 2, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 2, cv::Scalar(0, 0, 255),
+               -1);
     cv::circle(imageMap, cv::Point(Map::startPoint.x * ratio, Map::startPoint.y * ratio), 1, cv::Scalar(0, 0, 255), -1);
-    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 1, cv::Scalar(0, 0, 255), -1);
+    cv::circle(imageMap, cv::Point(Map::finishPoint.x * ratio, Map::finishPoint.y * ratio), 1, cv::Scalar(0, 0, 255),
+               -1);
     for (auto& obstacle : Map::obstacles)
     {
         Point* current = obstacle;
@@ -117,6 +136,7 @@ void OpenCV::saveMapGradient()
         cv::line(imageMap, cv::Point(current->x * ratio, current->y * ratio),
                  cv::Point(obstacle->x * ratio, obstacle->y * ratio), cv::Scalar(0, 0, 0), 3);
     }
+    OpenCV::clearCanvasWithMap();
 }
 
 void OpenCV::clearCanvasWithMap()
@@ -131,4 +151,3 @@ cv::Scalar OpenCV::getGradientColor(float value)
     int index = static_cast<int>(std::clamp(normalized, 0.0f, 255.0f));
     return OpenCV::colorLUT[index];
 }
-

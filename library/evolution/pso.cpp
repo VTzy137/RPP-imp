@@ -4,7 +4,6 @@
 #include <cmath>
 #include <iostream>
 
-// Define static members
 Path* PSO::currPath = nullptr;
 Path* PSO::gPath = nullptr;
 std::vector<Path*> PSO::pPath;
@@ -65,7 +64,7 @@ void PSO::moveFollowGradient(Point* begin, Point* middle, Point* end)
 
 void PSO::planePath(Point* begin, Point* middle, int position)
 {
-    if (!Point::stillOnMap(middle->y, middle->x))
+    if (Point::reachBoundary(static_cast<int>(middle->y), static_cast<int>(middle->x)))
     {
         PSO::normalDirect[position] = !PSO::normalDirect[position];
     };

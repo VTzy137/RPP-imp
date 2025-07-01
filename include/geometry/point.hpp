@@ -24,6 +24,7 @@ class Point
 
     static bool stillOnMap(int y, int x);
     static bool stillOnMap(float y, float x);
+    static bool reachBoundary(int y, int x);
     bool stillOnMap();
 
     static bool canMoveTo(int targetY, int targetX);

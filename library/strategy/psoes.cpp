@@ -1,33 +1,26 @@
 #include "strategy/psoes.hpp"
 #include "UI/opencv.hpp"
 #include "evolution/es.hpp"
-#include "evolution/operator/mutation.hpp"
 #include "evolution/pso.hpp"
 #include "evolution/social.hpp"
 #include <chrono>
 #include <iostream>
 #include <thread>
-// #include "evolution/operator/combination.hpp"
 
-inline int loop = 10000;
-void PSOES()
+inline int iterationLimit = 10000;
+void sequencePSOES()
 {
-    int showloop = 50;
-    for (int i = 0; i < loop / 4; ++i)
+    int intervalTime = 50;
+    for (int iterationCount = 0; iterationCount < iterationLimit / 4; ++iterationCount)
     {
-        if (i % showloop == 0)
-        {
-            OpenCV::clearCanvasWithMap();
-            for (int j = 0; j < Path::population.size(); ++j)
-            {
-                OpenCV::drawPath(Path::population[j]);
-            }
-            OpenCV::showImage(30);
-            showloop += 2;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
-        // ES::est += 0.7 / loop;
+        if (iterationCount % intervalTime == 0)
+        {
+            OpenCV::showPopulation(10);
+            intervalTime += 2;
+        }
+
+        // ES::est += 0.7 / iterationLimit;
         // if (i % 100 == 0)
         // {
         //     ES::pathEvolutionStrategy();
@@ -37,12 +30,20 @@ void PSOES()
 
     std::cout << "start Social::saveExe()" << std::endl;
     Social::saveExe();
+    OpenCV::showPopulation();
+    std::cout << "Social::saveExe() done" << std::endl;
 
     std::cout << "ES::pathEvolutionStrategy(toiu)" << std::endl;
-    for (int i = 0; i < loop / 4; ++i)
+    for (int iterationCount = 0; iterationCount < iterationLimit / 4; ++iterationCount)
     {
-        // ES::rangeMutation += 30.0f / loop;
-        // ES::pathEvolutionStrategy();
+        if (iterationCount % intervalTime == 0)
+        {
+            OpenCV::showPopulation(3);
+            intervalTime += 2;
+        }
+
+        ES::rangeMutation += 30.0f / iterationLimit;
+        ES::pathEvolutionStrategy();
         // PSO::moveMent();
         // PSO::updateBestPath();
     }

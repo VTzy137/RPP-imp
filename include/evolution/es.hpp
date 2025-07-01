@@ -6,8 +6,9 @@
 class ES
 {
   public:
-    static Path* mutateGroup(Point* begin, float Gauss, int centerPoint);
+    static Path* mutateGroupPoint(Point* begin, float Gauss, int centerPoint);
 
+    static Path* combination(Path* p, Path* q);
     inline static int expandCenter = 6;
     inline static int offsetCenterPoint = 3;
     static Path* mutation(Path* parent);

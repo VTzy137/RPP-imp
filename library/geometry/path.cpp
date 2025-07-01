@@ -24,9 +24,9 @@ bool Path::eligibleToRemoveNextPoint(Point& begin, Point& nextPoint)
     if (nextPoint.nextPoint == nullptr)
         return false;
 
-    float eDis = begin.euclideanDistanceTo(nextPoint);
+    float euclideanDistance = begin.euclideanDistanceTo(nextPoint);
     float angle = Vector::turnAngle(begin, nextPoint, *(nextPoint.nextPoint));
-    if (eDis < 15 && eDis > 3 && angle < angleThreshold)
+    if (euclideanDistance > 3 && euclideanDistance < 15 && fabs(angle) < angleThreshold)
         return true;
     return false;
 }
@@ -39,8 +39,7 @@ void Path::simplifyPath()
         Point* nextPoint = point->nextPoint;
         if (eligibleToRemoveNextPoint(*point, *nextPoint))
             point->nextPoint = nextPoint->nextPoint;
-        else
-            point = point->nextPoint;
+        point = point->nextPoint;
     }
 }
 

@@ -10,7 +10,8 @@ void Input::readMap(int numInput)
 {
     const std::string configPath = std::string(ASSET_PATH) + "/";
 
-    const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
+    // const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
+    const std::string mapFilePath = configPath + "sampleMap/map" + std::to_string(numInput) + ".txt";
     std::ifstream mapFile(mapFilePath);
 
     if (!mapFile.is_open())
@@ -44,7 +45,7 @@ void Input::readMap(int numInput)
     std::cout << "Number of obstacles: " << Map::numObstacle << std::endl;
     std::string line;
 
-    for (int i = 0; i < Map::numObstacle; ++i)
+    for (int obstacleIndex = 0; obstacleIndex < Map::numObstacle; ++obstacleIndex)
     {
         Map::obstacles.push_back(nullptr);
         mapFile.ignore();
@@ -57,14 +58,14 @@ void Input::readMap(int numInput)
             ss >> x;
             y *= SCALE_FACTOR;
             x *= SCALE_FACTOR;
-            Map::obstacles[i] = new Point(y, x, Map::obstacles[i]);
+            Map::obstacles[obstacleIndex] = new Point(y, x, Map::obstacles[obstacleIndex]);
         }
     }
 
-    for (int i = 0; i < Map::numObstacle; ++i)
+    for (int obstacleIndex = 0; obstacleIndex < Map::numObstacle; ++obstacleIndex)
     {
-        std::cout << "Obstacle " << i << ": ";
-        Point* current = Map::obstacles[i];
+        std::cout << "Obstacle " << obstacleIndex << ": ";
+        Point* current = Map::obstacles[obstacleIndex];
         while (current != nullptr)
         {
             std::cout << current->y << " " << current->x << " ";
@@ -76,7 +77,9 @@ void Input::readMap(int numInput)
     const float mapWidth = Map::mapWidth;
     const float mapHeight = Map::mapHeight;
 
+    std::cout << "mapWidth: " << mapWidth << " mapHeight: " << mapHeight << std::endl;
 
+    Map::obstacles.push_back(nullptr);
     Map::obstacles[Map::numObstacle] = new Point(0, 0, Map::obstacles[Map::numObstacle]);
     Map::obstacles[Map::numObstacle] = new Point(mapWidth, 0, Map::obstacles[Map::numObstacle]);
     Map::obstacles[Map::numObstacle] = new Point(mapWidth, mapHeight, Map::obstacles[Map::numObstacle]);
@@ -90,6 +93,7 @@ void Input::readMap(int numInput)
         current = current->nextPoint;
     }
     std::cout << std::endl;
+    std::cout << "obstacles: " << Map::obstacles.size() << std::endl;
 
     ++Map::numObstacle;
 }
