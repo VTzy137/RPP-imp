@@ -3,31 +3,42 @@ using namespace std;
 struct point
 {
     double x, y;
-    point *next;
-    point() : x(0), y(0), next(nullptr) {};
-    point(double x1, double y1, point *next1) : x(x1), y(y1), next(next1) {}
+    point* next;
+    point() : x(0), y(0), next(nullptr){};
+    point(double x1, double y1, point* next1) : x(x1), y(y1), next(next1)
+    {
+    }
 };
+
 struct path
 {
     double distance, angle, safety;
-    point *begin;
-    path() : distance(1000000), angle(1000000), begin(nullptr) {}
-    path(point *p1) : distance(1000000), angle(1000000), begin(p1) {}
-    path(double distance1, double angle1, point *p1) : distance(distance1), angle(angle1), begin(p1) {}
+    point* begin;
+    path() : distance(1000000), angle(1000000), begin(nullptr)
+    {
+    }
+    path(point* p1) : distance(1000000), angle(1000000), begin(p1)
+    {
+    }
+    path(double distance1, double angle1, point* p1) : distance(distance1), angle(angle1), begin(p1)
+    {
+    }
 };
-path *paths[50];
+
+path* paths[50];
 point *start, *finish, *obstacles[1000], *population[100];
 int mapHeight, mapWidth, numObstacle, numPath = 0;
 
-bool check(point *m, point *n, point *p, point *q)
+bool check(point* m, point* n, point* p, point* q)
 {
     double b = n->x - m->x, a = m->y - n->y, c = a * m->x + b * m->y;
     return (p->x * a + p->y * b - c) * (q->x * a + q->y * b - c) <= 0;
 }
 
-double distancePointToLine(point *p, point *m, point *n)
+double distancePointToLine(point* p, point* m, point* n)
 {
-    double a = sqrt(pow(m->x - p->x, 2) + pow(m->y - p->y, 2)), b = sqrt(pow(n->x - p->x, 2) + pow(n->y - p->y, 2)), c = sqrt(pow(m->x - n->x, 2) + pow(m->y - n->y, 2));
+    double a = sqrt(pow(m->x - p->x, 2) + pow(m->y - p->y, 2)), b = sqrt(pow(n->x - p->x, 2) + pow(n->y - p->y, 2)),
+           c = sqrt(pow(m->x - n->x, 2) + pow(m->y - n->y, 2));
     double q = (a + b + c) / 2, s = sqrt(q * (q - a) * (q - b) * (q - c)), h = s * 2.0 / c;
     // cout << a << " " << b << " " << c << endl;
     if (abs(sqrt(a * a - h * h) + sqrt(b * b - h * h) - c) > 0.01)
@@ -36,12 +47,12 @@ double distancePointToLine(point *p, point *m, point *n)
     return h;
 }
 
-double distanceToObstacle(point *p, point *p1)
+double distanceToObstacle(point* p, point* p1)
 {
     double tmp = 1e9;
     for (int i = 0; i < numObstacle; ++i)
     {
-        point *obstacle = obstacles[i];
+        point* obstacle = obstacles[i];
         while (obstacle->next != nullptr)
         {
             tmp = min(tmp, distancePointToLine(p, obstacle, obstacle->next));
@@ -60,7 +71,7 @@ double distanceToObstacle(point *p, point *p1)
     return tmp;
 }
 
-void pathFunc(path *path1)
+void pathFunc(path* path1)
 {
     point *p = path1->begin, *p1 = p->next;
     double x = p1->x - p->x, y = p1->y - p->y;
@@ -89,9 +100,9 @@ void pathFunc(path *path1)
     path1->angle = max(1.0, angle) / sqrt(i);
 }
 double limitHV = 300;
-bool checkValidPath(path *p)
+bool checkValidPath(path* p)
 {
-    point *p1 = p->begin;
+    point* p1 = p->begin;
     if (abs(p1->x - start->x) > 0.1 || abs(p1->y - start->y) > 0.1)
     {
         p1 = new point(start->x, start->y, p1);
@@ -106,7 +117,7 @@ bool checkValidPath(path *p)
         }
         for (int i = 0; i < numObstacle; ++i)
         {
-            point *obstacle = obstacles[i];
+            point* obstacle = obstacles[i];
             while (obstacle->next != nullptr)
             {
                 if (check(p1, p1->next, obstacle, obstacle->next) && check(obstacle, obstacle->next, p1, p1->next))
@@ -130,18 +141,16 @@ bool checkValidPath(path *p)
 
 int main()
 {
-    // freopen("input\\map6.txt", "r", stdin);
-    // const string s =
-    int numIO = 15;
-    ifstream file1("HaiNSGAII\\nsgaii_test" + to_string(numIO) + ".txt");
+    int numIO = 11;
+    ifstream file1("../../assets/HaiNSGAII/nsgaii_test" + to_string(numIO) + ".txt");
     // ifstream file1("HaiPSOES\\psoes_test"+to_string(numIO)+".txt");
     // ifstream file1("HaiPSO\\pso_test"+to_string(numIO)+".txt");
     // ifstream file1("output\\out"+to_string(numIO)+".txt");
-    ifstream file2("input\\map" + to_string(numIO) + ".txt");
-    // freopen("out.txt", "r", stdin);
+    ifstream file2("../../assets/input/map" + to_string(numIO) + ".txt");
     start = new point();
     finish = new point();
     file2 >> mapHeight >> mapWidth;
+    cout << "mapHeight: " << mapHeight << " mapWidth: " << mapWidth << endl;
     file2 >> start->x >> start->y >> finish->x >> finish->y;
     file2 >> numObstacle;
 
@@ -179,7 +188,7 @@ int main()
         // cout << x;
         if (abs(x + 2.0) < 0.01 || abs(x + 1.0) < 0.01)
         {
-            path *tmp = new path();
+            path* tmp = new path();
             point *p = population[numPath], *q = p->next, *l = q->next;
             p->next = nullptr;
             while (l != nullptr)
@@ -212,8 +221,7 @@ int main()
     }
     file1.close();
     // cout << numPath << endl;
-    sort(paths, paths + numPath, [](path *path1, path *path2) -> bool
-         { return path1->distance < path2->distance; });
+    sort(paths, paths + numPath, [](path* path1, path* path2) -> bool { return path1->distance < path2->distance; });
     map<double, double> ma;
     ma[0] = limitHV;
     ma[limitHV] = 0;
@@ -226,7 +234,7 @@ int main()
         hyperVolume += sq * (paths[i]->distance - past);
         double tmp = 0, tmp1 = limitHV;
         sq = 0;
-        for (auto &j : ma)
+        for (auto& j : ma)
         {
             if (j.second > tmp1)
                 continue;
@@ -238,6 +246,5 @@ int main()
     }
     hyperVolume += sq * (limitHV - past);
     int hv = (int)hyperVolume;
-    cout << endl
-         << "Hyper volume: " << hv << endl;
+    cout << endl << "Hyper volume: " << hv << endl;
 }
