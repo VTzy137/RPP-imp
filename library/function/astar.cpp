@@ -28,17 +28,17 @@ Path* init_population::AStarSearch()
         int y = newPoint.second.first;
         int x = newPoint.second.second;
         int pointIndex = y * 1000 + x;
-        for (int i = 0; i < 8; ++i)
+        for (int neighborIndex = 0; neighborIndex < 8; ++neighborIndex)
         {
-            int y1 = y + GlobalType::neighbors[i].dy;
-            int x1 = x + GlobalType::neighbors[i].dx;
+            int y1 = y + GlobalType::neighbors[neighborIndex].dy;
+            int x1 = x + GlobalType::neighbors[neighborIndex].dx;
 
             if (pastPoint[y1][x1] == 0 && Point::isValidPosition(y1, x1))
             {
                 pastPoint[y1][x1] = pointIndex;
                 gDistance[y1][x1] =
-                    gDistance[y][x] +
-                    sqrt(static_cast<float>(abs(GlobalType::neighbors[i].dy) + abs(GlobalType::neighbors[i].dx)));
+                    gDistance[y][x] + sqrt(static_cast<float>(abs(GlobalType::neighbors[neighborIndex].dy) +
+                                                              abs(GlobalType::neighbors[neighborIndex].dx)));
 
                 aStar.insert(std::make_pair(gDistance[y1][x1] + Vector::euclideanLength(y1, x1, yFinish, xFinish),
                                             std::make_pair(y1, x1)));
@@ -50,8 +50,8 @@ Path* init_population::AStarSearch()
             else if (Point::isValidPosition(y1, x1))
             {
                 float distance =
-                    gDistance[y][x] +
-                    sqrt(static_cast<float>(abs(GlobalType::neighbors[i].dy) + abs(GlobalType::neighbors[i].dx)));
+                    gDistance[y][x] + sqrt(static_cast<float>(abs(GlobalType::neighbors[neighborIndex].dy) +
+                                                              abs(GlobalType::neighbors[neighborIndex].dx)));
 
                 gDistance[y1][x1] = std::min(gDistance[y1][x1], distance);
             }

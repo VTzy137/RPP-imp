@@ -38,18 +38,19 @@ void rppImp()
 
     std::cout << "start sequencePSOES" << std::endl;
     sequencePSOES();
+    OpenCV::showPopulation();
     std::cout << "finish sequencePSOES" << std::endl;
 
 
-    std::cout << "Social::lastSocial() start" << std::endl;
-    // Social::lastSocial();
-    std::cout << "Social::lastSocial() done" << std::endl;
+    Social::lastSocial();
+    std::cout << "lastSocial done" << std::endl;
 
     OpenCV::showPopulation();
     // OpenCV::drawPath(Path::gPath);
-    Log::initialize(1);
-    Log::logPopulation("population");
-    Log::close();
+
+    // Log::initialize(1);
+    // Log::logPopulation("population");
+    // Log::close();
 
     // Path::gPath->calculatePathTargetScore();
     // std::cout << -2 << std::endl;

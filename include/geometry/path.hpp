@@ -69,7 +69,6 @@ class Path
         begin = nullptr;
     }
 
-
     int numPoints() const;
 
     static float angleThreshold;

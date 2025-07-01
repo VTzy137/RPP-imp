@@ -28,7 +28,8 @@ bool Path::eligibleToRemoveNextPoint(Point& begin, Point& nextPoint)
 
     float euclideanDistance = begin.euclideanDistanceTo(nextPoint);
     float angle = Vector::turnAngle(begin, nextPoint, *(nextPoint.nextPoint));
-    if (euclideanDistance > 3 && euclideanDistance < 15 && fabs(angle) < angleThreshold)
+    // std::cout << "angle: " << angle << std::endl;
+    if (euclideanDistance > 5 && euclideanDistance < 13 && fabs(angle) < angleThreshold)
     {
         return true;
     }
@@ -80,8 +81,8 @@ int Path::numTargetBetterThan(const Path& other) const
     {
         numBetter++;
     }
-    // if (this->risk > other.risk)
-    //     numBetter++;
+    if (this->risk > other.risk)
+        numBetter++;
     return numBetter;
 }
 
@@ -143,19 +144,17 @@ void Path::calculatePathTargetScore()
     float risk = 0.0f;
     while (nextPoint->nextPoint != nullptr)
     {
-        nextPoint = point->nextPoint;
-        distance += point->euclideanDistanceTo(*nextPoint);
-        if (nextPoint->nextPoint != nullptr)
-        {
-            float turnAngle = Vector::turnAngle(*point, *nextPoint, *nextPoint->nextPoint);
-            angle += turnAngle * turnAngle;
-        }
-        risk += std::max(0, nextPoint->gradientRisk() - 500000);
+        distance += nextPoint->euclideanDistanceTo(*nextPoint->nextPoint);
+        float turnAngle = Vector::turnAngle(*point, *nextPoint, *nextPoint->nextPoint);
+        angle += turnAngle * turnAngle;
+
+        risk += std::max(0, nextPoint->gradientRisk() - 400000);
         point = nextPoint;
+        nextPoint = point->nextPoint;
     }
-    this->risk = risk / this->numPoints();
+    this->risk = risk / this->numPoints() / 2000;
     this->distance = distance;
-    this->angle = std::max(1.0f, angle);
+    this->angle = std::max(0.0f, angle) * 10;
 }
 
 void Path::changePathTo(const Path& other)

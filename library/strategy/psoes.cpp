@@ -16,7 +16,7 @@ void sequencePSOES()
 
         if (iterationCount % intervalTime == 0)
         {
-            // OpenCV::showPopulation(10);
+            // OpenCV::showPopulation(3);
             intervalTime += 2;
         }
 
@@ -33,18 +33,18 @@ void sequencePSOES()
             Social::pureSocial();
         }
     }
+    OpenCV::showPopulation();
+    std::cout << "PSO migration done" << std::endl;
 
-    std::cout << "start Social::saveExe()" << std::endl;
-    // Social::saveExe();
+    Social::saveExe();
     OpenCV::showPopulation();
     std::cout << "Social::saveExe() done" << std::endl;
 
-    std::cout << "ES::pathEvolutionStrategy(toiu)" << std::endl;
-    for (int iterationCount = 1000000; iterationCount < iterationLimit / 4; ++iterationCount)
+    for (int iterationCount = 0; iterationCount < iterationLimit / 4; ++iterationCount)
     {
         if (iterationCount % intervalTime == 0)
         {
-            OpenCV::showPopulation(3);
+            OpenCV::showPopulation(10);
             intervalTime += 2;
         }
 
@@ -53,4 +53,5 @@ void sequencePSOES()
         // PSO::moveMent();
         // PSO::updateBestPath();
     }
+    std::cout << "pathEvolutionStrategy done" << std::endl;
 }
