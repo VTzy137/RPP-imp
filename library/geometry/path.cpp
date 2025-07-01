@@ -22,12 +22,16 @@ float Path::angleThreshold = 0.003f;
 bool Path::eligibleToRemoveNextPoint(Point& begin, Point& nextPoint)
 {
     if (nextPoint.nextPoint == nullptr)
+    {
         return false;
+    }
 
     float euclideanDistance = begin.euclideanDistanceTo(nextPoint);
     float angle = Vector::turnAngle(begin, nextPoint, *(nextPoint.nextPoint));
     if (euclideanDistance > 3 && euclideanDistance < 15 && fabs(angle) < angleThreshold)
+    {
         return true;
+    }
     return false;
 }
 
@@ -38,7 +42,9 @@ void Path::simplifyPath()
     {
         Point* nextPoint = point->nextPoint;
         if (eligibleToRemoveNextPoint(*point, *nextPoint))
+        {
             point->nextPoint = nextPoint->nextPoint;
+        }
         point = point->nextPoint;
     }
 }
@@ -67,9 +73,13 @@ int Path::numTargetBetterThan(const Path& other) const
 {
     int numBetter = 0;
     if (this->angle < other.angle)
+    {
         numBetter++;
+    }
     if (this->distance < other.distance)
+    {
         numBetter++;
+    }
     // if (this->risk > other.risk)
     //     numBetter++;
     return numBetter;
@@ -114,9 +124,13 @@ float Path::isSuperiorThan(const Path& other) const
 bool Path::dominantPath(const Path& a, const Path& b)
 {
     if (a.angle <= b.angle && a.distance <= b.distance && a.risk <= b.risk)
+    {
         return true;
+    }
     else
+    {
         return false;
+    }
 }
 
 

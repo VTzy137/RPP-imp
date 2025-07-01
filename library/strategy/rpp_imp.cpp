@@ -13,6 +13,7 @@
 #include "strategy/psoes.hpp"
 #include "strategy/rpp_imp.hpp"
 #include "utils/input.hpp"
+#include "utils/log.hpp"
 
 
 void rppImp()
@@ -23,28 +24,17 @@ void rppImp()
     std::cout << "marked map gradient" << std::endl;
 
     OpenCV::saveMapGradient();
+    OpenCV::showImage();
     std::cout << "saved map gradient" << std::endl;
 
+    init_population::addCurvePopulation(30);
     OpenCV::showImage();
+    std::cout << "inited curve population" << std::endl;
 
-    std::cout << "start init population" << std::endl;
-    for (int individualIndex = 0; individualIndex < 30; individualIndex++)
-    {
-        Point* startPoint = new Point(Map::startPoint.y, Map::startPoint.x, nullptr);
-        Point* finishPoint = new Point(Map::finishPoint.y, Map::finishPoint.x, nullptr);
-        
-        PSO::normalDirect[individualIndex] = init_population::initRandPath(startPoint, finishPoint);
-        Path::population.push_back(new Path(startPoint));
-
-        OpenCV::drawPath(Path::population[individualIndex], cv::Scalar(200, 200, 0));
-    }
-
-    // Path* astarRes = init_population::AStarSearch();
-    // Path::gPath = astarRes;
-    // Path::population.push_back(Path::gPath);
-    std::cout << "finish init population" << std::endl;
-
+    init_population::addAStarPopulation(1);
     OpenCV::showImage();
+    std::cout << "inited astar population" << std::endl;
+
 
     std::cout << "start sequencePSOES" << std::endl;
     sequencePSOES();
@@ -56,22 +46,10 @@ void rppImp()
     std::cout << "Social::lastSocial() done" << std::endl;
 
     OpenCV::showPopulation();
-
-    for (int i = 0; i < Path::population.size(); i++)
-    {
-        if (i != 0)
-            std::cout << -1 << std::endl;
-        Point* tmp = Path::population[i]->begin;
-        while (tmp != nullptr)
-        {
-            std::cout << tmp->x / 2 << " " << tmp->y / 2 << std::endl;
-            tmp = tmp->nextPoint;
-        }
-    }
     // OpenCV::drawPath(Path::gPath);
-    // OpenCV::showImage();
-
-    OpenCV::showPopulation();
+    Log::initialize(1);
+    Log::logPopulation("population");
+    Log::close();
 
     // Path::gPath->calculatePathTargetScore();
     // std::cout << -2 << std::endl;

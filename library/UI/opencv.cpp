@@ -35,6 +35,7 @@ void OpenCV::showPopulation(int time)
     for (int individualIndex = 0; individualIndex < Path::population.size(); ++individualIndex)
     {
         OpenCV::drawPath(Path::population[individualIndex]);
+        // OpenCV::drawPath(Path::population[individualIndex], cv::Scalar(200, 200, 0));
     }
     OpenCV::showImage(time);
 }

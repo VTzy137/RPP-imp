@@ -1,27 +1,27 @@
+#include "UI/opencv.hpp"
+#include "evolution/pso.hpp"
+#include "function/init_population.hpp"
 #include "geometry/map.hpp"
 #include <cmath>
-#include <function/init_population.hpp>
 #include <iostream>
 #include <random>
 
 
-namespace init_population
-{
-bool initRandPath(Point* beginPoint, Point* endPoint)
+bool init_population::initRandPath(Point* beginPoint, Point* endPoint)
 {
     float yBegin = beginPoint->y, xBegin = beginPoint->x;
     float distance = Vector::euclideanLength(*beginPoint, *endPoint);
     float sin = (endPoint->y - yBegin) / distance;
     float cos = (endPoint->x - xBegin) / distance;
 
-    int rangePathCurve = std::rand() % rangeCurveLimit - normalize;
+    int rangePathCurve = std::rand() % init_population::rangeCurveLimit - init_population::normalize;
 
     for (float lineDistance = 0; lineDistance < distance; lineDistance += 20)
     {
         float lineIndex = (lineDistance - (distance / 2)) / distance;
         float curveRadius = rangePathCurve * (1 - lineIndex * lineIndex);
-        float y = std::max(minCurve, yBegin + sin * lineDistance + cos * curveRadius);
-        float x = std::max(minCurve, xBegin + cos * lineDistance - sin * curveRadius);
+        float y = std::max(init_population::minCurve, yBegin + sin * lineDistance + cos * curveRadius);
+        float x = std::max(init_population::minCurve, xBegin + cos * lineDistance - sin * curveRadius);
         beginPoint->nextPoint = new Point(y, x, nullptr);
         beginPoint = beginPoint->nextPoint;
     }
@@ -29,17 +29,25 @@ bool initRandPath(Point* beginPoint, Point* endPoint)
     return (rangePathCurve < 0);
 }
 
-Path* curvePathInit()
+std::pair<Path*, bool> init_population::curvePathInit()
 {
+    Point* startPoint = new Point(Map::startPoint.y, Map::startPoint.x, nullptr);
+    Point* finishPoint = new Point(Map::finishPoint.y, Map::finishPoint.x, nullptr);
 
-    Point* beginPath = new Point(Map::startPoint.y, Map::startPoint.x, nullptr);
-    Point* endPath = new Point(Map::finishPoint.y, Map::finishPoint.x, nullptr);
+    Path* curvePath = new Path(startPoint);
+    bool normalDirect = init_population::initRandPath(startPoint, finishPoint);
 
-    // PSO::normalDirect[i] = init_population::initRandPath(tmp, tmp1);
-
-    Path* curvePath = new Path(beginPath);
-    // OpenCV::drawPath(Path::population[i], cv::Scalar(200, 200, 0));
-    return curvePath;
+    return std::make_pair(curvePath, normalDirect);
 }
 
-} // namespace init_population
+void init_population::addCurvePopulation(int numIndividual)
+{
+    for (int individualIndex = 0; individualIndex < numIndividual; individualIndex++)
+    {
+        std::pair<Path*, bool> curvePath = init_population::curvePathInit();
+        Path::population.push_back(curvePath.first);
+        PSO::normalDirect[individualIndex] = curvePath.second;
+
+        OpenCV::drawPath(Path::population[individualIndex], cv::Scalar(200, 200, 0));
+    }
+}

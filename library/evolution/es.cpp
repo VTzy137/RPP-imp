@@ -2,45 +2,53 @@
 #include "geometry/path.hpp"
 #include <iostream>
 
-Path* ES::combination(Path* p, Path* q)
+Path* ES::combination(Path* dadPath, Path* momPath)
 {
-    if (q == nullptr)
-        return nullptr;
-    Point *p1 = p->begin, *q1 = q->begin->nextPoint, *tmp1 = new Point(p1->x, p1->y, nullptr);
-    p1 = p1->nextPoint;
-    Path* tmp = new Path(tmp1);
-    while (p1->nextPoint != nullptr)
+    if (momPath == nullptr)
     {
-        tmp1->nextPoint = new Point((p1->x + q1->x) / 2, (p1->y + q1->y) / 2, nullptr);
-        tmp1 = tmp1->nextPoint;
-        p1 = p1->nextPoint;
-        q1 = q1->nextPoint;
+        return nullptr;
     }
-    tmp1->nextPoint = new Point(p1->x, p1->y, nullptr);
-    tmp->calculatePathTargetScore();
-    return tmp;
+
+    Point* dadPoint = dadPath->begin;
+    Point* momPoint = momPath->begin->nextPoint;
+    Point* offPoint = new Point(dadPoint->x, dadPoint->y, nullptr);
+
+    dadPoint = dadPoint->nextPoint;
+    Path* offPath = new Path(offPoint);
+
+    while (dadPoint->nextPoint != nullptr)
+    {
+        offPoint->nextPoint = new Point((dadPoint->x + momPoint->x) / 2, (dadPoint->y + momPoint->y) / 2, nullptr);
+        offPoint = offPoint->nextPoint;
+        dadPoint = dadPoint->nextPoint;
+        momPoint = momPoint->nextPoint;
+    }
+
+    offPoint->nextPoint = new Point(dadPoint->x, dadPoint->y, nullptr);
+    offPath->calculatePathTargetScore();
+    return offPath;
 }
 
-Path* ES::mutateGroupPoint(Point* tmp, float length, int centerPoint)
+Path* ES::mutateGroupPoint(Point* refPoint, float length, int centerPoint)
 {
     float y1 = (static_cast<float>(rand() % 200 - 100)) / ES::rangeMutation;
     float x1 = (static_cast<float>(rand() % 200 - 100)) / ES::rangeMutation;
 
     int pointIndex = 0;
-    Point* offPoint = new Point(tmp->y, tmp->x, nullptr);
+    Point* offPoint = new Point(refPoint->y, refPoint->x, nullptr);
     Path* offspring = new Path(offPoint);
-    tmp = tmp->nextPoint;
-    while (tmp->nextPoint != nullptr)
+    refPoint = refPoint->nextPoint;
+    while (refPoint->nextPoint != nullptr)
     {
         float wei = 1 - std::min(1.0f, std::abs(pointIndex++ - centerPoint) / length);
-        offPoint->nextPoint = new Point(tmp->y + y1 * wei, tmp->x + x1 * wei, nullptr);
+        offPoint->nextPoint = new Point(refPoint->y + y1 * wei, refPoint->x + x1 * wei, nullptr);
         if (!Vector::isValidVector(*offPoint, *offPoint->nextPoint))
             return nullptr;
         offPoint = offPoint->nextPoint;
-        tmp = tmp->nextPoint;
+        refPoint = refPoint->nextPoint;
     }
 
-    offPoint->nextPoint = new Point(tmp->y, tmp->x, nullptr);
+    offPoint->nextPoint = new Point(refPoint->y, refPoint->x, nullptr);
     return offspring;
 }
 
@@ -49,9 +57,6 @@ inline static int expandCenter = 6;
 inline static int offsetCenterPoint = 3;
 Path* ES::mutation(Path* parent)
 {
-    // std::cout << "parent->begin->y: " << parent->begin->y << std::endl;
-    // std::cout << "numPoints: " << parent->numPoints() << " est: " << est << " rangeMutation: " << rangeMutation
-    //           << std::endl;
     int numPoints = parent->numPoints();
     int maxLength = static_cast<int>(numPoints * est / 4);
     float length = static_cast<float>(rand() % maxLength);
@@ -71,17 +76,17 @@ Path* ES::mutation(Path* parent)
 
 void ES::pathEvolutionStrategy()
 {
-    for (int i = 0; i < Path::population.size(); ++i)
+    for (int individual = 0; individual < Path::population.size(); ++individual)
     {
         // int pathLen = Path::population[i].numPoints();
         std::cout << "pathEvolutionStrategy: mutation" << std::endl;
-        Path* tmp = ES::mutation(Path::population[i]);
+        Path* mutatedPath = ES::mutation(Path::population[individual]);
         std::cout << "pathEvolutionStrategy: mutation done" << std::endl;
 
-        if (Path::betterPath(*tmp, *Path::population[i]))
+        if (Path::betterPath(*mutatedPath, *Path::population[individual]))
         {
             std::cout << "pathEvolutionStrategy: betterPath" << std::endl;
-            Path::population[i] = tmp;
+            Path::population[individual] = mutatedPath;
             // Path::population[i].changePathTo(*combination1(tmp, &Path::pPath[i]));
         }
     }

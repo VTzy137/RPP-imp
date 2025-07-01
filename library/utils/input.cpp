@@ -10,8 +10,8 @@ void Input::readMap(int numInput)
 {
     const std::string configPath = std::string(ASSET_PATH) + "/";
 
-    // const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
-    const std::string mapFilePath = configPath + "sampleMap/map" + std::to_string(numInput) + ".txt";
+    const std::string mapFilePath = configPath + "input/map" + std::to_string(numInput) + ".txt";
+    // const std::string mapFilePath = configPath + "sampleMap/map" + std::to_string(numInput) + ".txt";
     std::ifstream mapFile(mapFilePath);
 
     if (!mapFile.is_open())

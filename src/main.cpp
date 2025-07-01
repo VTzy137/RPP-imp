@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     srand(time(0));
     clock_t startTime = clock();
 
-    Input::readMap(28);
+    Input::readMap(8);
     std::cout << "read map done" << std::endl;
     OpenCV::calcResize();
     std::cout << "calc resize done" << std::endl;

@@ -21,6 +21,9 @@
     "functional": "cpp",
     "ranges": "cpp",
     "future": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "any": "cpp",
+    "optional": "cpp",
+    "sstream": "cpp"
   }
 }

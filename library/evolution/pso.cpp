@@ -10,13 +10,15 @@ std::vector<Path*> PSO::pPath;
 
 void PSO::updateVelocity(int invidual)
 {
-    int j = 1;
+    int pointIndex = 1;
     Point *p = Path::population[invidual]->begin->nextPoint, *pp = PSO::pPath[invidual]->begin->nextPoint;
     while (p != nullptr && pp != nullptr)
     {
-        PSO::velocity[invidual][j][0] = PSO::w0PSO * PSO::velocity[invidual][j][0] + PSO::w1PSO * (pp->x - p->x);
-        PSO::velocity[invidual][j][1] = PSO::w0PSO * PSO::velocity[invidual][j][1] + PSO::w1PSO * (pp->y - p->y);
-        ++j;
+        PSO::velocity[invidual][pointIndex][0] =
+            PSO::w0PSO * PSO::velocity[invidual][pointIndex][0] + PSO::w1PSO * (pp->x - p->x);
+        PSO::velocity[invidual][pointIndex][1] =
+            PSO::w0PSO * PSO::velocity[invidual][pointIndex][1] + PSO::w1PSO * (pp->y - p->y);
+        ++pointIndex;
         p = p->nextPoint;
         pp = pp->nextPoint;
     }
@@ -24,16 +26,16 @@ void PSO::updateVelocity(int invidual)
 
 void PSO::moveMent()
 {
-    for (int i = 0; i < Path::population.size(); i++)
+    for (int individual = 0; individual < Path::population.size(); individual++)
     {
-        updateVelocity(i);
+        updateVelocity(individual);
         std::cout << "updateVelocity" << std::endl;
-        Point* p = Path::population[i]->begin->nextPoint;
-        int pathLen = Path::population[i]->numPoints();
+        Point* p = Path::population[individual]->begin->nextPoint;
+        int pathLen = Path::population[individual]->numPoints();
         for (int j = 1; j < pathLen - 1; ++j)
         {
-            p->x += velocity[i][j][0] * PSO::wVPSO;
-            p->y += velocity[i][j][1] * PSO::wVPSO;
+            p->x += PSO::velocity[individual][j][0] * PSO::wVPSO;
+            p->y += PSO::velocity[individual][j][1] * PSO::wVPSO;
             p = p->nextPoint;
         }
     }
@@ -64,31 +66,37 @@ void PSO::moveFollowGradient(Point* begin, Point* middle, Point* end)
 
 void PSO::planePath(Point* begin, Point* middle, int position)
 {
-    if (Point::reachBoundary(static_cast<int>(middle->y), static_cast<int>(middle->x)))
-    {
-        PSO::normalDirect[position] = !PSO::normalDirect[position];
-    };
     if (!Point::isValidPosition(middle->y, middle->x))
     {
         if (PSO::normalDirect[position])
+        {
             Vector::offsetMiddleToReduceBend(*begin, *middle, *middle->nextPoint);
+        }
         else
+        {
             Vector::offsetMiddleToReduceBend(*middle->nextPoint, *middle, *begin);
+        }
     }
 }
 
 void PSO::PSOmigrate()
 {
-    for (int i = 0; i < Path::population.size(); i++)
+    for (int individual = 0; individual < Path::population.size(); individual++)
     {
-        Point *pointPast = Path::population[i]->begin, *point_i = pointPast->nextPoint;
+        Point *pointPast = Path::population[individual]->begin, *point_i = pointPast->nextPoint;
         std::pair<float, float> q;
+        bool changeDirection = false;
         while (point_i != nullptr && point_i->nextPoint != nullptr)
         {
 
             moveFollowGradient(pointPast, point_i, point_i->nextPoint);
 
-            planePath(pointPast, point_i, i);
+            if (Point::reachBoundary(static_cast<int>(point_i->y), static_cast<int>(point_i->x)))
+            {
+                changeDirection = true;
+            }
+
+            planePath(pointPast, point_i, individual);
 
             if (point_i->euclideanDistanceTo(*pointPast) > 7)
             {
@@ -107,6 +115,10 @@ void PSO::PSOmigrate()
                 point_i = point_i->nextPoint;
                 pointPast = pointPast->nextPoint;
             }
+        }
+        if (changeDirection)
+        {
+            PSO::normalDirect[individual] = !PSO::normalDirect[individual];
         }
     }
     // std::cout << "PSOmigrate done" << std::endl;

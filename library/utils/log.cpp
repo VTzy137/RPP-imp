@@ -8,7 +8,6 @@ bool Log::isInitialized = false;
 
 void Log::initialize(int numLogger)
 {
-
     const std::string configPath = std::string(ASSET_PATH) + "/";
     const std::string logFilePath = configPath + "log/log" + std::to_string(numLogger) + ".txt";
 
@@ -63,5 +62,22 @@ void Log::close()
         logBothLine("Log closing...");
         logFile.close();
         isInitialized = false;
+    }
+}
+
+void Log::logPopulation(const std::string& message)
+{
+    for (int individual = 0; individual < Path::population.size(); individual++)
+    {
+        if (individual != 0)
+        {
+            logLine("-1");
+        }
+        Point* tmp = Path::population[individual]->begin;
+        while (tmp != nullptr)
+        {
+            logLine(std::to_string(tmp->x / 2) + " " + std::to_string(tmp->y / 2));
+            tmp = tmp->nextPoint;
+        }
     }
 }
