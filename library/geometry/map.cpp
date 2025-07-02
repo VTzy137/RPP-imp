@@ -12,14 +12,16 @@ void Map::markObstaclePoint(int y, int x)
         int ny = y + neighbor.dy;
         int nx = x + neighbor.dx;
         if (!Point::stillOnMap(ny, nx))
+        {
             continue;
+        }
         mapGradient[ny][nx] = 1000000;
     }
 }
 
 void Map::markObstaclePoint(float y, float x)
 {
-    markObstaclePoint(static_cast<int>(y), static_cast<int>(x));
+    Map::markObstaclePoint(static_cast<int>(y), static_cast<int>(x));
 }
 
 void Map::markObstacleLine(float y1, float x1, float y2, float x2)
@@ -28,17 +30,17 @@ void Map::markObstacleLine(float y1, float x1, float y2, float x2)
     float sin = (y2 - y1) / length;
     float cos = (x2 - x1) / length;
     const float step = 1.0f;
-    for (float t = 0.0f; t <= length; t += step)
+    for (float positionStep = 0.0f; positionStep <= length; positionStep += step)
     {
-        float y = y1 + t * sin;
-        float x = x1 + t * cos;
-        markObstaclePoint(y, x);
+        float y = y1 + positionStep * sin;
+        float x = x1 + positionStep * cos;
+        Map::markObstaclePoint(y, x);
     }
 }
 
 void Map::markObstacleLine(const Point& begin, const Point& end)
 {
-    markObstacleLine(begin.y, begin.x, end.y, end.x);
+    Map::markObstacleLine(begin.y, begin.x, end.y, end.x);
 }
 
 
@@ -48,22 +50,36 @@ void Map::markObstacleOutline(Point* beginPoint)
     Point* nextPoint = point->nextPoint;
     while (nextPoint != nullptr)
     {
-        markObstacleLine(*point, *nextPoint);
+        Map::markObstacleLine(*point, *nextPoint);
         point = nextPoint;
         nextPoint = point->nextPoint;
     }
-    markObstacleLine(*point, *beginPoint);
+    Map::markObstacleLine(*point, *beginPoint);
 }
 
 void Map::markAllObstaclesOutline()
 {
     for (auto obstacle : Map::obstacles)
     {
-        markObstacleOutline(obstacle);
+        Map::markObstacleOutline(obstacle);
     }
 
     mapGradient[static_cast<int>(startPoint.y)][static_cast<int>(startPoint.x)] = 0;
     mapGradient[static_cast<int>(finishPoint.y)][static_cast<int>(finishPoint.x)] = 0;
+}
+
+void Map::markMapBoundary()
+{
+    for (int y = 0; y < Map::mapHeight; y++)
+    {
+        mapGradient[y][0] = 2500000;
+        mapGradient[y][Map::mapWidth - 1] = 2500000;
+    }
+    for (int x = 0; x < Map::mapWidth; x++)
+    {
+        mapGradient[0][x] = 2500000;
+        mapGradient[Map::mapHeight - 1][x] = 2500000;
+    }
 }
 
 
@@ -94,37 +110,44 @@ void Map::markAllPointCanCome()
 
 void Map::markGradientByDistanceFromOutline()
 {
-    std::queue<std::pair<int, int>> q;
-    for (int i = 0; i <= Map::mapHeight; i++)
+    std::queue<std::pair<int, int>> pointQueue;
+    for (int y = 0; y <= Map::mapHeight; y++)
     {
-        for (int j = 0; j <= Map::mapWidth; j++)
+        for (int x = 0; x <= Map::mapWidth; x++)
         {
-            if (Map::mapGradient[i][j] == 1000000)
+            if (Map::mapGradient[y][x] == 1000000)
             {
-                q.push(std::make_pair(i, j));
-                Map::mapGradient[i][j] = 1100100;
+                pointQueue.push(std::make_pair(y, x));
+                Map::mapGradient[y][x] = 1100100;
             }
         }
     }
-    while (q.empty() == false)
+    while (pointQueue.empty() == false)
     {
-        int i = q.front().first, j = q.front().second;
-        q.pop();
+        int y = pointQueue.front().first, x = pointQueue.front().second;
+        pointQueue.pop();
         for (auto& neighbor : GlobalType::neighbors)
         {
-            int i1 = i + neighbor.dy, j1 = j + neighbor.dx, t = 1;
-            if (!Point::stillOnMap(i1, j1))
-                continue;
-            if (Map::mapGradient[i1][j1] == 0)
+            int y1 = y + neighbor.dy;
+            int x1 = x + neighbor.dx;
+            if (!Point::stillOnMap(y1, x1))
             {
-                Map::mapGradient[i1][j1] = Map::mapGradient[i][j] + 100000;
+                continue;
             }
-            else if (Map::mapGradient[i1][j1] == 1)
-                Map::mapGradient[i1][j1] = std::max(Map::mapGradient[i][j] - 100000, 10);
+
+            if (Map::mapGradient[y1][x1] == 0)
+            {
+                Map::mapGradient[y1][x1] = Map::mapGradient[y][x] + 100000;
+            }
+            else if (Map::mapGradient[y1][x1] == 1)
+            {
+                Map::mapGradient[y1][x1] = std::max(Map::mapGradient[y][x] - 100000, 10);
+            }
             else
-                t = 0;
-            if (t)
-                q.push(std::make_pair(i1, j1));
+            {
+                continue;
+            }
+            pointQueue.push(std::make_pair(y1, x1));
         }
     }
 }
@@ -150,14 +173,17 @@ void Map::smoothMapGradient()
 
 void Map::markMapGradient()
 {
-    markAllObstaclesOutline();
+    Map::markAllObstaclesOutline();
     std::cout << "markAllObstaclesOutline done" << std::endl;
 
-    markAllPointCanCome();
+    markMapBoundary();
+    std::cout << "markMapBoundary done" << std::endl;
+
+    Map::markAllPointCanCome();
     std::cout << "markAllPointCanCome done" << std::endl;
 
-    markGradientByDistanceFromOutline();
+    Map::markGradientByDistanceFromOutline();
     std::cout << "markGradientByDistanceFromOutline done" << std::endl;
 
-    smoothMapGradient();
+    Map::smoothMapGradient();
 }

@@ -13,6 +13,7 @@ class Map
     static void markObstacleOutline(Point* beginPoint);
 
     static void markAllObstaclesOutline();
+    static void markMapBoundary();
     static void markAllPointCanCome();
     static void markGradientByDistanceFromOutline();
 

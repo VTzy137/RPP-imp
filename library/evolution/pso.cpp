@@ -43,13 +43,13 @@ void PSO::moveMent()
 
 void PSO::updateBestPath()
 {
-    for (int i = 0; i < Path::population.size(); i++)
+    for (int individual = 0; individual < Path::population.size(); individual++)
     {
-        // if (Path::betterPath(Path::population[i], PSO::pPath[i]))
-        //     PSO::pPath[i].changePathTo(Path::population[i]);
-        if (Path::betterPath(*Path::population[i], *PSO::gPath))
+        if (Path::betterPath(*Path::population[individual], *PSO::pPath[individual]))
+            PSO::pPath[individual]->changePathTo(*Path::population[individual]);
+        if (Path::betterPath(*Path::population[individual], *PSO::gPath))
         {
-            PSO::gPath->changePathTo(*Path::population[i]);
+            PSO::gPath->changePathTo(*Path::population[individual]);
         }
     }
 }
@@ -68,7 +68,7 @@ void PSO::planePath(Point* begin, Point* middle, int position)
 {
     if (!Point::isValidPosition(middle->y, middle->x))
     {
-        if (PSO::normalDirect[position])
+        if (PSO::normalDirect[position] > 0)
         {
             Vector::offsetMiddleToReduceBend(*begin, *middle, *middle->nextPoint);
         }
@@ -105,7 +105,7 @@ void PSO::PSOmigrate()
                 pointPast = pointPast->nextPoint;
             }
             else if (point_i->euclideanDistanceTo(*pointPast) < 3 &&
-                     std::fabs(Vector::turnAngle(*pointPast, *point_i, *point_i->nextPoint)) < 0.2)
+                     std::fabs(Vector::turnAngle(*pointPast, *point_i, *point_i->nextPoint)) < 0.08)
             {
                 pointPast->nextPoint = point_i->nextPoint;
                 point_i = pointPast->nextPoint;
@@ -118,7 +118,21 @@ void PSO::PSOmigrate()
         }
         if (changeDirection)
         {
-            PSO::normalDirect[individual] = !PSO::normalDirect[individual];
+            // PSO::normalDirect[individual] = !PSO::normalDirect[individual];
+            std::cout << "normalDirect: " << PSO::normalDirect[individual] << std::endl;
+            if (abs(PSO::normalDirect[individual]) == 1)
+            {
+                PSO::normalDirect[individual] = - PSO::normalDirect[individual] * 10;
+            }
+            else if (PSO::normalDirect[individual] > 0)
+            {
+                --PSO::normalDirect[individual];
+            }
+            else
+            {
+                ++PSO::normalDirect[individual];
+            }
+            std::cout << "normalDirect: " << PSO::normalDirect[individual] << std::endl;
         }
     }
     // std::cout << "PSOmigrate done" << std::endl;

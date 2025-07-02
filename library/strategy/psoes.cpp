@@ -44,7 +44,7 @@ void sequencePSOES()
     {
         if (iterationCount % intervalTime == 0)
         {
-            OpenCV::showPopulation(10);
+            OpenCV::showPopulation(30);
             intervalTime += 2;
         }
 

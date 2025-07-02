@@ -164,6 +164,7 @@ void Path::changePathTo(const Path& other)
     this->risk = other.risk;
     Point* point = this->begin;
     Point* nextPoint = point->nextPoint;
+    
     point->nextPoint = nullptr;
     while (nextPoint != nullptr)
     {

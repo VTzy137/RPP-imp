@@ -106,12 +106,12 @@ void OpenCV::saveMapGradient()
                 int x = static_cast<int>(j * ratio);
                 int y = static_cast<int>(i * ratio);
 
-                // cv::rectangle(imageMap, cv::Point(x, y),
-                //               cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color,
-                //               -1);
                 cv::rectangle(imageMap, cv::Point(x, y),
-                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1),
-                              cv::Scalar(255, 255, 255), -1);
+                              cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1), color,
+                              -1);
+                // cv::rectangle(imageMap, cv::Point(x, y),
+                //               cv::Point(x + static_cast<int>(ratio) + 1, y + static_cast<int>(ratio) + 1),
+                //               cv::Scalar(255, 255, 255), -1);
             }
         }
     }

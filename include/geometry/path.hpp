@@ -13,7 +13,6 @@ class Path
 
   public:
     inline static int populationMax = 100;
-    inline static Path *currPath, *gPath;
     inline static std::vector<Path*> population;
     inline static constexpr float MAX_VALUE = 1e7f;
 

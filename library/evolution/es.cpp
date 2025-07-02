@@ -1,4 +1,5 @@
 #include "evolution/es.hpp"
+#include "evolution/pso.hpp"
 #include "geometry/path.hpp"
 #include <iostream>
 
@@ -79,15 +80,13 @@ void ES::pathEvolutionStrategy()
     for (int individual = 0; individual < Path::population.size(); ++individual)
     {
         // int pathLen = Path::population[i].numPoints();
-        std::cout << "pathEvolutionStrategy: mutation" << std::endl;
         Path* mutatedPath = ES::mutation(Path::population[individual]);
-        std::cout << "pathEvolutionStrategy: mutation done" << std::endl;
 
         if (Path::betterPath(*mutatedPath, *Path::population[individual]))
         {
-            std::cout << "pathEvolutionStrategy: betterPath" << std::endl;
+            // std::cout << "pathEvolutionStrategy: betterPath" << std::endl;
             Path::population[individual] = mutatedPath;
-            // Path::population[i].changePathTo(*combination1(tmp, &Path::pPath[i]));
+            // Path::population[individual] = combination(mutatedPath, PSO::pPath[individual]);
         }
     }
 }
